@@ -1,0 +1,39 @@
+precision mediump float;
+
+uniform int u_paletteSize;
+uniform vec4 u_palette[64];
+uniform sampler2D u_image;
+varying vec2 v_texCoord;
+
+{{ COLOR_METRIC_SOURCE_STRING }}
+
+{{ COLOR_REDUCER_SOURCE_STRING }}
+
+void main() {
+    if (u_paletteSize == 0)
+    {
+        gl_FragColor = texture2D(u_image, v_texCoord);
+        return;
+    }
+    
+    vec4 currentColor = texture2D(u_image, v_texCoord);
+    float minDistance = 1.0 / 0.0; // inf
+    float currentDistance = 0.0;
+    vec4 paletteColor = vec4(currentColor);
+
+    for(int i = 0; i < 64; i++)
+    {
+        if (i >= u_paletteSize)
+            break;
+
+        currentDistance = metric(currentColor, u_palette[i]);
+        
+        if (currentDistance < minDistance)
+        {
+            minDistance = currentDistance;
+            paletteColor = vec4(u_palette[i]);
+        }
+    }
+
+    gl_FragColor = reducer(currentColor, paletteColor);
+}
