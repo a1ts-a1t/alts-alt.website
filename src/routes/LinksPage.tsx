@@ -1,13 +1,13 @@
-import React, { useMemo } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import Chatbox from '../components/home/Chatbox';
-import { useTitle } from '../hooks';
+import { useTitle, useFetch } from '../hooks';
 import { Link } from 'react-router-dom';
 
 interface LinkPreviewProps {
     name: string;
     href: string;
     imgSrc: string;
-    color: string;
+    color?: string;
 }
 
 const LinkPreview: React.FC<LinkPreviewProps> = ({
@@ -30,6 +30,7 @@ const LinkPreview: React.FC<LinkPreviewProps> = ({
             to={ href }
             rel="noopener noreferrer"
             target="_blank"
+            aria-description={ `Link to ${name}` }
         >
             <div className="size-24 sm:size-36">
                 <div className="bg-text m-auto h-full w-8 sm:w-12" style={ styleProperties } />
@@ -40,13 +41,32 @@ const LinkPreview: React.FC<LinkPreviewProps> = ({
         </Link>
     );
 };
-
 const LinksPage: React.FC = () => {
-    useTitle('alts-alt');
+    useTitle('alts-alt | Links');
+    const [ isLive, setIsLive ] = useState<boolean | null>(null);
 
     const dateString = useMemo(() => {
         return (new Date()).toUTCString();
     }, []);
+
+    const [
+        twitchApiResponse, twitchApiError, twitchApiLoading,
+    ] = useFetch('https://gql.twitch.tv/gql', {
+        method: 'POST',
+        headers: { ['Client-Id']: 'kimne78kx3ncx6brgo4mv6wki5h1ko' },
+        body: '{"query":"query {\\n  user(login:\\"alts_alt\\") {\\n    stream {\\n      id\\n    }\\n  }\\n}"}',
+    });
+
+    useEffect(() => {
+        if (twitchApiResponse === null || twitchApiError !== null || twitchApiLoading) {
+            setIsLive(null);
+            return;
+        }
+
+        twitchApiResponse.json()
+            .then((body) => setIsLive(body?.['data']?.['user']?.['stream'] !== null))
+            .catch(() => setIsLive(null));
+    }, [ twitchApiResponse, twitchApiError, twitchApiLoading ]);
 
     return (
         <div className='flex flex-col gap-y-12'>
@@ -67,7 +87,7 @@ const LinksPage: React.FC = () => {
                     color="#1DA1F2"
                 />
                 <LinkPreview
-                    name="twitch"
+                    name={ isLive === null ? 'twitch' : isLive ? 'twitch (live)' : 'twitch (offline)' }
                     href="https://twitch.tv/alts_alt_"
                     imgSrc="/static/icons/twitch.svg"
                     color="#6441A5"
@@ -77,6 +97,11 @@ const LinksPage: React.FC = () => {
                     href="https://bsky.app/profile/altsalt.bsky.social"
                     imgSrc="/static/icons/bluesky.svg"
                     color="#0085FF"
+                />
+                <LinkPreview
+                    name="github"
+                    href="https://github.com/a1ts-a1t"
+                    imgSrc="/static/icons/github.svg"
                 />
                 <LinkPreview
                     name="archidekt"

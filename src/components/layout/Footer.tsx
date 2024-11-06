@@ -40,11 +40,11 @@ const Footer: React.FC = () => {
                     aria-description='Link to my Twitter page'
                 />
                 <Link
-                    to='https://www.twitch.tv/alts_alt_'
+                    to='https://github.com/a1ts-a1t'
                     target='_blank'
                     rel="noopener noreferrer"
-                    className='bg-disabled size-5 bg-clip-[url("/static/icons/twitch.svg")] hover:bg-text'
-                    aria-description='Link to my Twitch page'
+                    className='bg-disabled size-5 bg-clip-[url("/static/icons/github.svg")] hover:bg-text'
+                    aria-description='Link to my GitHub page'
                 />
                 <Link
                     to='mailto:unrelated@gmail.com'
