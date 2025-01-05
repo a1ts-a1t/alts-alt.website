@@ -58,7 +58,7 @@ const PixelCanvas: React.FC<PixelCanvasProps> = ({
             for (let y = 0; y < pixelsPerSide; y++) {
                 const color = pixelArray.at(y)?.at(x);
                 if (color === undefined) {
-                    (x + y) % 2 === 0 ? context.fillStyle = '#eaeaea' : context.fillStyle = '#dadada';
+                    context.fillStyle = (x + y) % 2 === 0 ? '#eaeaea' : '#dadada';
                     context.fillRect(x * pixelSideLength, y * pixelSideLength, pixelSideLength, pixelSideLength);
                     continue;
                 }

@@ -34,7 +34,6 @@ export default tseslint.config(
                 'version': 'detect',
             },
         },
-        // @ts-expect-error reactlint typing is wrong
         rules: {
             '@stylistic/quotes': [ 'error', 'single' ],
             '@stylistic/indent': [ 'error', 4 ],
@@ -51,7 +50,7 @@ export default tseslint.config(
                 'functions': 'always-multiline',
                 'enums': 'always-multiline',
             }],
-            '@typescript-eslint/member-delimiter-style': [ 'error', {
+            '@stylistic/member-delimiter-style': [ 'error', {
                 'multiline': {
                     'delimiter': 'semi',
                     'requireLast': true,
