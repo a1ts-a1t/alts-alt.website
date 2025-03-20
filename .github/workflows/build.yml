@@ -1,20 +1,12 @@
-name: "Deploy alts-alt.neocities.org"
+name: "Build static website files"
 
-on:
-  push:
-    branches:
-      - main
-  workflow_dispatch:
-
-concurrency:
-  group: "deploy-to-neocities"
-  cancel-in-progress: false
+on: ["workflow_call"]
 
 env:
   NODE_ENV: "production"
 
 jobs:
-  deploy:
+  build:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -35,10 +27,11 @@ jobs:
         run: cp index.html not_found.html
         working-directory: "./dist/"
 
-      - name: Deploy to Neocities
-        uses: bcomnes/deploy-to-neocities@v2
+      - name: Publish build artifacts
+        uses: actions/upload-artifact@v4
         with:
-          api_token: ${{ secrets.NEOCITIES_API_TOKEN }}
-          cleanup: true
-          dist_dir: dist
+          name: build
+          path: dist/
+          if-no-files-found: error
+          overwrite: true
 
