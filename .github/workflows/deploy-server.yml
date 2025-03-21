@@ -1,0 +1,30 @@
+name: "Deploy to alts-alt.server"
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  build:
+    uses: a1ts-a1t/alts-alt.neocities.org/.github/workflows/build.yml@main
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+
+      - name: Initialize ssh
+        run: |
+          install -m 600 -D /dev/null ~/.ssh/id_rsa
+          echo "${{ secrets.HOST_SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          ssh-keyscan -H ${{ secrets.HOST_NAME }} > ~/.ssh/known_hosts
+
+      - name: Sync build directory
+        run: rsync -av --delete build ${{ secrets.HOST_USERNAME }}@${{ secrets.HOST_NAME }}:~/alts-alt.server/build
+
+      - name: Restart server
+        run: ssh ${{ secrets.HOST_USERNAME }}@${{ secrets.HOST_NAME }} "cd ~/alts-alt.server; docker compose up -d --build"
+
