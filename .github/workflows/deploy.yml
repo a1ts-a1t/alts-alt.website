@@ -1,4 +1,4 @@
-name: "Deploy to alts-alt.server"
+name: "Deploy alts-alt.neocities.org"
 
 on:
   push:
@@ -9,7 +9,22 @@ on:
 jobs:
   build:
     uses: a1ts-a1t/alts-alt.neocities.org/.github/workflows/build.yml@main
-  deploy:
+
+  deploy-neocities:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+
+      - name: Deploy to Neocities
+        uses: bcomnes/deploy-to-neocities@v2
+        with:
+          api_token: ${{ secrets.NEOCITIES_API_TOKEN }}
+          cleanup: true
+          dist_dir: build
+
+  deploy-alts-alt-server:
     needs: build
     runs-on: ubuntu-latest
     steps:
@@ -23,8 +38,9 @@ jobs:
           ssh-keyscan -H ${{ secrets.HOST_NAME }} > ~/.ssh/known_hosts
 
       - name: Sync build directory
-        run: rsync -av --delete build ${{ secrets.HOST_USERNAME }}@${{ secrets.HOST_NAME }}:~/alts-alt.server/build
+        run: rsync -av --delete build ${{ secrets.HOST_USERNAME }}@${{ secrets.HOST_NAME }}:~/alts-alt.server
 
       - name: Restart server
         run: ssh ${{ secrets.HOST_USERNAME }}@${{ secrets.HOST_NAME }} "cd ~/alts-alt.server; docker compose up -d --build"
+
 
