@@ -1,4 +1,4 @@
-name: "Deploy alts-alt.neocities.org"
+name: "Deploy website to hosts"
 
 on:
   push:
@@ -38,9 +38,8 @@ jobs:
           ssh-keyscan -H ${{ secrets.HOST_NAME }} > ~/.ssh/known_hosts
 
       - name: Sync build directory
-        run: rsync -av --delete build ${{ secrets.HOST_USERNAME }}@${{ secrets.HOST_NAME }}:~/alts-alt.server
+        run: rsync -av --delete build ${{ secrets.HOST_USERNAME }}@${{ secrets.HOST_NAME }}:~/alts-alt
 
       - name: Restart server
-        run: ssh ${{ secrets.HOST_USERNAME }}@${{ secrets.HOST_NAME }} "cd ~/alts-alt.server; docker compose up -d --build"
-
+        run: ssh ${{ secrets.HOST_USERNAME }}@${{ secrets.HOST_NAME }} "~/alts-alt/entrypoint.sh"
 
