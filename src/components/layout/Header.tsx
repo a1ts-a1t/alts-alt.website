@@ -111,8 +111,7 @@ const Header: React.FC<HeaderProps> = ({
         <div className='flex-none py-10'>
             <div className='hidden flex-row space-x-12 md:flex'>
                 <Link className="text-primary block h-fit font-bold hover:underline hover:underline-offset-2" to="/">
-                    <span className="inline-block">alts-alt.</span>
-                    <span className="inline-block">neocities.org!</span>
+                    <span className="inline-block">alts-alt!</span>
                 </Link>
                 <Link className='h-fit hover:underline hover:underline-offset-2' to='/links'>/links</Link>
                 <Link className='h-fit hover:underline hover:underline-offset-2' to='/projects'>/projects</Link>
@@ -146,8 +145,7 @@ const Header: React.FC<HeaderProps> = ({
                     </button>
                 </div>
                 <Link className="text-primary h-fit basis-1/2 text-center font-bold" to="/">
-                    <span className="inline-block">alts-alt.</span>
-                    <span className="inline-block">neocities.org!</span>
+                    <span className="inline-block">alts-alt!</span>
                 </Link>
                 <div className="basis-1/4">
                     <button
