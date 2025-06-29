@@ -24,7 +24,7 @@ jobs:
           cleanup: true
           dist_dir: build
 
-  deploy-alts-alt-server:
+  deploy-alts-alt:
     needs: build
     runs-on: ubuntu-latest
     steps:
@@ -34,11 +34,11 @@ jobs:
       - name: Initialize ssh
         run: |
           install -m 600 -D /dev/null ~/.ssh/id_rsa
-          echo "${{ secrets.HOST_SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
           ssh-keyscan -H ${{ secrets.HOST_NAME }} > ~/.ssh/known_hosts
 
       - name: Sync build directory
-        run: rsync -av --delete build ${{ secrets.HOST_USERNAME }}@${{ secrets.HOST_NAME }}:~/alts-alt
+        run: rsync -av --delete build ${{ secrets.USERNAME }}@${{ secrets.HOST_NAME }}:~/alts-alt
 
       - name: Restart server
         run: ssh ${{ secrets.HOST_USERNAME }}@${{ secrets.HOST_NAME }} "~/alts-alt/entrypoint.sh"
