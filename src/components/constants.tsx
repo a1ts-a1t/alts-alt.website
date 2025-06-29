@@ -6,7 +6,7 @@ export const BUNNY_SIGN_ELEMENT: React.JSX.Element = (
 &nbsp;----------------&nbsp;<br />
 │                │<br />
 │   WELCOME TO   │<br />
-│  MY NEOCITIES  │<br />
+│   MY WEBSITE   │<br />
 │       :3       │<br />
 │                │<br />
 &nbsp;----------------&nbsp;<br />
