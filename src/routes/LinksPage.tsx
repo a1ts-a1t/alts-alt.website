@@ -1,6 +1,6 @@
-import React, { useContext, useMemo } from 'react';
+import React, { useContext, useEffect, useMemo, useState } from 'react';
 import Chatbox from '../components/home/Chatbox';
-import { useTitle } from '../hooks';
+import { useCanFetch, useTitle } from '../hooks';
 import { Link } from 'react-router-dom';
 import { DarkModeContext, HighContrastModeContext} from '../components/contexts';
 
@@ -9,6 +9,7 @@ interface LinkPreviewProps {
     href: string;
     imgSrc: string;
     color?: string;
+    renderSvg?: boolean;
 }
 
 const LinkPreview: React.FC<LinkPreviewProps> = ({
@@ -16,6 +17,7 @@ const LinkPreview: React.FC<LinkPreviewProps> = ({
     href,
     imgSrc,
     color,
+    renderSvg = false,
 }) => {
     const styleProperties: React.CSSProperties = {
         maskImage: `url("${imgSrc}")`,
@@ -35,9 +37,15 @@ const LinkPreview: React.FC<LinkPreviewProps> = ({
             title={ `Link to ${name}` }
         >
             <div className="mx-auto">
-                <div>
-                    <div className="bg-text m-2 h-8 sm:h-10" style={ styleProperties } />
-                </div>
+                {
+                    renderSvg ? (
+                        <img src={ imgSrc } alt={ `${name} icon` } className="mx-auto my-2 h-8 sm:h-10" />
+                    ) : (
+                        <div>
+                            <div className="bg-text m-2 h-8 sm:h-10" style={ styleProperties } />
+                        </div>
+                    )
+                }
                 <div className="flex justify-center">
                     <div className="m-auto w-fit sm:text-xl">{ name.toLowerCase() }</div>
                 </div>
@@ -45,14 +53,51 @@ const LinkPreview: React.FC<LinkPreviewProps> = ({
         </Link>
     );
 };
+
+const getTwitchIconSrc = (isTwitchOnline: boolean, useTwitchAltIcon: boolean): string => {
+    if (isTwitchOnline && useTwitchAltIcon) {
+        return '/static/icons/twitch_online_alt.svg';
+    }
+
+    if (isTwitchOnline) {
+        return '/static/icons/twitch_online.svg';
+    }
+
+    if (useTwitchAltIcon) {
+        return '/static/icons/twitch_alt.svg';
+    }
+
+    return '/static/icons/twitch.svg';
+};
+
 const LinksPage: React.FC = () => {
     useTitle('alts-alt | Links');
     const isDarkMode = useContext<boolean>(DarkModeContext);
     const isHighContrastMode = useContext<boolean>(HighContrastModeContext);
+    const [ isTwitchOnline, setIsTwitchOnline ] = useState<boolean>(false);
 
     const dateString = useMemo(() => {
         return (new Date()).toUTCString();
     }, []);
+
+    useEffect(() => {
+        if (!useCanFetch()) {
+            return;
+        }
+
+        fetch('https://alts-alt.online/api/twitch')
+            .then((response) => {
+                if (response.status >= 400) {
+                    return Promise.resolve({});
+                }
+                return response.json();
+            })
+            .then((body) => !!body['is_live'])
+            .then(setIsTwitchOnline);
+    }, []);
+
+    const useTwitchAltIcon = isDarkMode && isHighContrastMode;
+    const twitchIconSrc = getTwitchIconSrc(isTwitchOnline, useTwitchAltIcon);
 
     return (
         <div className='flex flex-col gap-y-12'>
@@ -75,8 +120,8 @@ const LinksPage: React.FC = () => {
                 <LinkPreview
                     name="Twitch"
                     href="https://twitch.tv/alts_alt_"
-                    imgSrc="/static/icons/twitch.svg"
-                    color={ isHighContrastMode && isDarkMode ? '#764DC4' : '#6441A5' }
+                    imgSrc={ twitchIconSrc }
+                    renderSvg={ true }
                 />
                 <LinkPreview
                     name="Throne"
