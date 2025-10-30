@@ -64,6 +64,23 @@ const Projects: React.FC = () => {
                         />
                     </Link>
                 </Window>
+                <Window
+                    title='Kennel Club'
+                    optionsBar='A web ring with creature sprites'
+                    controlButtons={ [
+                        <Link to='/projects/kennel-club' key='kennel-club-link'>
+                            <div className="bg-text size-4 bg-clip-[url('/static/icons/link.svg')]" />
+                        </Link>,
+                    ] }
+                >
+                    <Link to='/projects/kennel-club' className='h-64'>
+                        <ImageSuspense
+                            src="https://alts-alt.online/api/kennel-club/img"
+                            alt='Kennel Club preview'
+                            className='size-full object-cover object-center'
+                        />
+                    </Link>
+                </Window>
             </div>
         </div>
     );

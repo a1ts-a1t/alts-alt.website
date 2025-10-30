@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 /**
  * React hook for setting page title.
@@ -20,4 +20,36 @@ export const useTitle = (title: string) => {
  */
 export const useCanFetch = (): boolean => {
     return !window.location.hostname.includes('neocities');
+};
+
+/**
+ * React hook for standardizing fetching.
+ * If there is no response and it is not loading, there
+ * was some non-API related issue (ie, the environment does not allow fetching)
+ * @return [response attributes, isLoading]
+ */
+export const useFetch = (url: string): [{ body: string; status: number } | undefined, boolean] => {
+    const [ response, setResponse ] = useState<{ body: string; status: number } | undefined>(undefined);
+    const [ isLoading, setIsLoading ] = useState<boolean>(false);
+
+    useEffect(() => {
+        setIsLoading(true);
+        setResponse(undefined);
+
+        fetch(url)
+            .then(async (response) => {
+                const body = await response.text();
+                setResponse({
+                    body,
+                    status: response.status,
+                });
+            })
+            .finally(() => setIsLoading(false));
+    }, [ url ]);
+
+    if (!useCanFetch()) {
+        return [ undefined, false ];
+    }
+
+    return [ response, isLoading ];
 };

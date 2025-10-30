@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useMemo, useState } from 'react';
 import Chatbox from '../components/home/Chatbox';
-import { useCanFetch, useTitle } from '../hooks';
+import { useFetch, useTitle } from '../hooks';
 import { Link } from 'react-router-dom';
 import { DarkModeContext, HighContrastModeContext} from '../components/contexts';
 
@@ -75,26 +75,19 @@ const LinksPage: React.FC = () => {
     const isDarkMode = useContext<boolean>(DarkModeContext);
     const isHighContrastMode = useContext<boolean>(HighContrastModeContext);
     const [ isTwitchOnline, setIsTwitchOnline ] = useState<boolean>(false);
+    const [ response, isLoading ] = useFetch('https://alts-alt.online/api/twitch');
 
     const dateString = useMemo(() => {
         return (new Date()).toUTCString();
     }, []);
 
     useEffect(() => {
-        if (!useCanFetch()) {
+        if (isLoading || response === undefined || response.status >= 400) {
             return;
         }
 
-        fetch('https://alts-alt.online/api/twitch')
-            .then((response) => {
-                if (response.status >= 400) {
-                    return Promise.resolve({});
-                }
-                return response.json();
-            })
-            .then((body) => !!body['is_live'])
-            .then(setIsTwitchOnline);
-    }, []);
+        setIsTwitchOnline(!!JSON.parse(response.body)['is_live']);
+    }, [ response, isLoading ]);
 
     const useTwitchAltIcon = isDarkMode && isHighContrastMode;
     const twitchIconSrc = getTwitchIconSrc(isTwitchOnline, useTwitchAltIcon);
