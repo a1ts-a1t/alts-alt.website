@@ -7,6 +7,7 @@ import LinksPage from './routes/LinksPage';
 import Projects from './routes/projects/Projects';
 import PixelSvgMakerPage from './routes/projects/PixelSvgMakerPage';
 import PalettePosterizationPage from './routes/projects/PalettePosterizationPage';
+import KennelClubPage from './routes/projects/KennelClubPage';
 
 const Router = (
     <BrowserRouter>
@@ -18,6 +19,7 @@ const Router = (
                     <Route index element={ <Projects /> } />
                     <Route path='pixel-svg-maker' element={ <PixelSvgMakerPage /> } />
                     <Route path='palette-posterizer' element={ <PalettePosterizationPage /> } />
+                    <Route path='kennel-club' element={ <KennelClubPage /> } />
                 </Route>
                 <Route path='*' element={ <Error404 /> } />
             </Route>
