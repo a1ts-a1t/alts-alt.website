@@ -14,20 +14,16 @@ export const Creature: React.FC<CreatureProps> = ({ creature, kennelWidth, kenne
     const imageRef = useRef<HTMLImageElement>(null);
 
     useEffect(() => {
-        const width = 2 * creature.radius * kennelWidth;
-        const height = 2 * creature.radius * kennelHeight;
-
-        const left = creature.position.x * kennelWidth - width;
-        const top = creature.position.y * kennelHeight - height;
-
-        const minDimension = Math.min(width, height);
+        const canvasCreatureRadius = creature.radius * Math.min(kennelWidth, kennelHeight);
+        const left = creature.position.x * kennelWidth - canvasCreatureRadius;
+        const top = kennelHeight - creature.position.y * kennelHeight - canvasCreatureRadius;
+        const canvasCreatureDiameter = 2 * canvasCreatureRadius;
 
         setRect({
             left,
             top,
-            // square result
-            width: minDimension,
-            height: minDimension,
+            width: canvasCreatureDiameter,
+            height: canvasCreatureDiameter,
         });
     }, [ creature, kennelWidth, kennelHeight ]);
 
