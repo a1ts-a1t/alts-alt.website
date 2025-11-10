@@ -1,11 +1,11 @@
-import React, { useCallback, useState } from 'react';
-import { useFetch } from '../../../hooks';
+import React, { useCallback, useEffect, useState } from 'react';
 import ImageSuspense from '../../common/ImageSuspense';
 import { KennelJson } from './types';
 import { Creature } from './Creature';
 
 export const KennelClub: React.FC = () => {
-    const [ response, isLoading ] = useFetch('https://alts-alt.online/api/kennel-club');
+    const [ isError, setIsError ] = useState<boolean>(false);
+    const [ kennel, setKennel ] = useState<KennelJson | undefined>(undefined);
     const [ kennelWidth, setKennelWidth ] = useState<number>(0);
     const [ kennelHeight, setKennelHeight ] = useState<number>(0);
 
@@ -33,29 +33,46 @@ export const KennelClub: React.FC = () => {
         return () => { };
     }, []);
 
-    const isError = (response === undefined && !isLoading)
-        || (response !== undefined && response.status >= 400);
+    useEffect(() => {
+        const ws = new WebSocket('wss://alts-alt.online/ws/kennel-club');
+        ws.addEventListener('message', (e) => {
+            setKennel(JSON.parse(e.data) as KennelJson);
+        });
+
+        ws.addEventListener('error', () => {
+            setIsError(true);
+            ws.close();
+        });
+
+        return () => ws.close();
+    }, []);
 
     if (isError) {
         return (
-            <ImageSuspense alt="Kennel Club" src="https://alts-alt.online/api/kennel-club/img" />
+            <div className='border-text flex aspect-square size-full flex-col items-center justify-center border-2'>
+                <ImageSuspense alt="Kennel Club" src="https://alts-alt.online/api/kennel-club/img" />
+            </div>
         );
     }
 
-    if (isLoading || response === undefined) {
+    if (kennel === undefined) {
         return (
-            <div className='bg-disabled flex size-full flex-col items-center justify-center'>
+            <div className='border-text bg-disabled flex aspect-square size-full flex-col items-center justify-center border-2'>
                 <div>{ 'Loading Kennel Club...' }</div>
             </div>
         );
     }
 
-    const kennel: KennelJson = JSON.parse(response.body);
-
     return (
         <div id="kennel" className='border-text relative aspect-square w-full border-2' ref={ kennelRef }>
             { kennel.map((creature) => (
-                <Creature key={ creature.id } creature={ creature } kennelWidth={ kennelWidth } kennelHeight={ kennelHeight } />
+                <Creature
+                    key={ creature.id }
+                    creature={ creature }
+                    kennelWidth={ kennelWidth }
+                    kennelHeight={ kennelHeight }
+                    onError={ () => setIsError(true) }
+                />
             )) }
         </div>
     );
