@@ -29,22 +29,17 @@ export const Creature: React.FC<CreatureProps> = ({ creature, kennelWidth, kenne
 
     // refresh image
     useEffect(() => {
-        if (imageRef.current === null) {
-            return;
-        }
+        const url = `https://alts-alt.online${creature.sprite_path}`;
+        fetch(url, { cache: 'reload', mode: 'no-cors' })
+            .then(() => {
+                if (imageRef.current === null) {
+                    return;
+                }
 
-        // this is kind of hacky but whatever lmao
-        // https://stackoverflow.com/questions/1077041/refresh-image-with-a-new-one-at-the-same-url/
-        imageRef.current.src = `https://alts-alt.online${creature.sprite_path}#${new Date().getTime()}`;
+                imageRef.current.src = url;
+            })
+            .catch(() => onError())
     }, [ creature ]);
-
-    useEffect(() => {
-        if (imageRef.current === null) {
-            return;
-        }
-
-        imageRef.current.addEventListener('error', onError);
-    }, []);
 
     return (
         <Link
