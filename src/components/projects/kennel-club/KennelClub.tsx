@@ -71,7 +71,6 @@ export const KennelClub: React.FC = () => {
                     creature={ creature }
                     kennelWidth={ kennelWidth }
                     kennelHeight={ kennelHeight }
-                    onError={ () => setIsError(true) }
                 />
             )) }
         </div>
