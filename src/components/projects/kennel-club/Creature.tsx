@@ -29,7 +29,7 @@ export const Creature: React.FC<CreatureProps> = ({ creature, kennelWidth, kenne
 
     // refresh image
     useEffect(() => {
-        const url = `https://alts-alt.online${creature.sprite_path}`;
+        const url = `https://alts-alt.online${creature.sprite_path}#${new Date().getTime()}`;
         fetch(url, { cache: 'reload', mode: 'no-cors' })
             .then(() => {
                 if (imageRef.current === null) {
@@ -38,7 +38,7 @@ export const Creature: React.FC<CreatureProps> = ({ creature, kennelWidth, kenne
 
                 imageRef.current.src = url;
             })
-            .catch(() => onError())
+            .catch(() => onError());
     }, [ creature ]);
 
     return (

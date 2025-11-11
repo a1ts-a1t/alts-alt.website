@@ -4,7 +4,7 @@ import { useTitle } from '../../hooks';
 import { Link } from 'react-router-dom';
 
 const KennelClubPage: React.FC = () => {
-    useTitle('alts-alt | Palette Posterization');
+    useTitle('alts-alt | Kennel Club');
 
     return (
         <div className='flex w-full flex-col gap-y-8'>
