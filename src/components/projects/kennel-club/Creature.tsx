@@ -32,11 +32,11 @@ export const Creature: React.FC<CreatureProps> = ({ creature, kennelWidth, kenne
             to={ creature.url }
             rel="noopener noreferrer"
             target="_blank"
-            aria-description={ `Link to ${creature.id}` }
+            aria-description={ `Link to ${creature.display_name}` }
             title={ `Link to ${creature.id}` }
             style={ { ...rect } }
         >
-            <img className="size-full object-cover" src={ `https://alts-alt.online${creature.sprite_path}` } alt={ `${creature.id} sprite` } />
+            <img className="size-full object-cover" src={ `https://alts-alt.online${creature.sprite_path}` } alt={ `${creature.display_name} sprite` } />
         </Link>
     );
 };

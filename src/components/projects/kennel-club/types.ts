@@ -7,6 +7,7 @@ export interface CreatureJson {
         y: number;
     };
     sprite_path: string;
+    display_name: string;
 }
 
 export type KennelJson = CreatureJson[];
