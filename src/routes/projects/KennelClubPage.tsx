@@ -13,6 +13,7 @@ const KennelClubPage: React.FC = () => {
             <div className='flex w-full flex-col gap-y-8'>
                 <h2 className='text-secondary text-2xl'>What is this?</h2>
                 <p>I wanted to make a webring for my friends! And for whatever reason, I wanted all the websites to be represented by little creatures running around all over the place. This is that! If you refresh the page, the kennel should update with the little critters moving around and following each other and whatnot. (Maybe I&apos;ll get around to live updating it who knows.)</p>
+                <p>This project is heavily inspired by <Link className='text-enabled hover:underline hover:underline-offset-2' target='_blank' rel='noopener noreferrer' to='https://en.wikipedia.org/wiki/Neko_(software)'>Neko</Link>! Also, shoutout to <Link className='text-enabled hover:underline hover:underline-offset-2' target='_blank' rel='noopener noreferrer' to='https://toffeecraft.itch.io/bunny-animations-pixel-white'>ToffeeCraft</Link> from whom I got my bunny sprites from. (You really think I can do art like that???)</p>
                 <p>If you want to join the webring, check out the instructions on <Link className='text-enabled hover:underline hover:underline-offset-2' target='_blank' rel='noopener noreferrer' to='https://github.com/a1ts-a1t/kennel-club/CONTRIBUTING.md'>github</Link>.</p>
                 <p>Happy webring-ing!</p>
             </div>

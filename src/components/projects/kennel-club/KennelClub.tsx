@@ -50,7 +50,7 @@ export const KennelClub: React.FC = () => {
     if (isError) {
         return (
             <div className='border-text flex aspect-square size-full flex-col items-center justify-center border-2'>
-                <ImageSuspense alt="Kennel Club" src="https://alts-alt.online/api/kennel-club/img" />
+                <ImageSuspense alt="Kennel Club webring represented by a series of creatures in a container" src="https://alts-alt.online/api/kennel-club/img" />
             </div>
         );
     }
