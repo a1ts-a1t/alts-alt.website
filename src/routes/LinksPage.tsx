@@ -123,9 +123,10 @@ const LinksPage: React.FC = () => {
                     color="#D221AF"
                 />
                 <LinkPreview
-                    name="PO Box"
-                    href="/static/files/po-box.txt"
-                    imgSrc="/static/icons/mailbox.svg"
+                    name="Instagram"
+                    href="https://www.instagram.com/alts_alt_/"
+                    imgSrc="/static/icons/instagram.svg"
+                    color="#D300C5"
                 />
                 <LinkPreview
                     name="GitHub"
