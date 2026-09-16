@@ -1,0 +1,42 @@
+---
+interface Props {
+  id: string;
+  placement?: "left" | "right";
+  maxHeight?: string;
+}
+
+const { id, placement = "left", maxHeight } = Astro.props;
+---
+
+<ul
+  role="menu"
+  id={id}
+  style={{ '--Menu-maxHeight': maxHeight }}
+  class:list={[
+    { placementLeft: placement === "left", placementRight: placement === "right" },
+  ]}
+>
+  <slot />
+</ul>
+
+<style>
+  [role="menu"] {
+    z-index: 10;
+    background-color: var(--color-bg);
+    border: 1px dotted var(--color-text);
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    padding-inline-start: 0;
+    max-height: var(--Menu-maxHeight, 512px);
+    overflow-y: auto;
+  }
+
+  .placementRight {
+    right: 0;
+  }
+
+  .placementLeft {
+    left: 0;
+  }
+</style>

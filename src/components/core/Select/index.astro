@@ -1,0 +1,111 @@
+---
+import dropdownIcon from "~/assets/icons/dropdown.svg";
+import dropdownOpenIcon from "~/assets/icons/dropdown-open.svg";
+import VisiblyHiddenText from "~/components/core/VisiblyHiddenText";
+import { getSelectIds } from "./utils";
+
+interface Props {
+  id: string;
+  label: string;
+  placement?: "left" | "right";
+  placeholder: string;
+  maxHeight?: string;
+}
+
+const { id, label, placement = "left", placeholder, maxHeight } = Astro.props;
+const { labelId, comboboxId, listboxId, placeholderId } = getSelectIds(id);
+---
+
+<div id={id} class="select">
+  <VisiblyHiddenText id={labelId}>{label}</VisiblyHiddenText>
+  <div
+    role="combobox"
+    id={comboboxId}
+    class="trigger"
+    tabindex="0"
+    aria-expanded="false"
+    aria-controls={listboxId}
+    aria-labelledby={labelId}
+    aria-activedescendant=""
+  >
+    <span id={placeholderId} class="placeholder">{placeholder}</span>
+    <span
+      class:list={["bg-clip", "arrow"]}
+      style={{
+        "--arrow-closed": `url(${dropdownIcon.src})`,
+        "--arrow-open": `url(${dropdownOpenIcon.src})`,
+      }}
+      aria-hidden="true"
+    />
+  </div>
+  <div
+    role="listbox"
+    id={listboxId}
+    aria-labelledby={labelId}
+    class:list={[
+      "listbox",
+      { placementLeft: placement === "left", placementRight: placement === "right" },
+    ]}
+    style={{ '--Select-maxHeight': maxHeight }}
+  >
+    <slot />
+  </div>
+</div>
+
+<style>
+  .select {
+    position: relative;
+    width: fit-content;
+  }
+
+  .trigger {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    column-gap: 12px;
+    height: 32px;
+    padding: 8px;
+    width: max-content;
+    cursor: pointer;
+    border: 1px solid var(--color-text);
+  }
+
+  .trigger:hover .placeholder {
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+
+  .arrow {
+    background-color: var(--color-text);
+    height: 100%;
+    width: 12px;
+    --bg-image: var(--arrow-closed);
+  }
+
+  .select.open .arrow {
+    --bg-image: var(--arrow-open);
+  }
+
+  .listbox {
+    z-index: 10;
+    background-color: var(--color-bg);
+    border: 1px dotted var(--color-text);
+    position: absolute;
+    display: none;
+    flex-direction: column;
+    padding-inline-start: 0;
+    max-height: var(--Select-maxHeight, 512px);
+  }
+
+  .select.open .listbox {
+    display: flex;
+  }
+
+  .placementRight {
+    right: 0;
+  }
+
+  .placementLeft {
+    left: 0;
+  }
+</style>

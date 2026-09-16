@@ -1,0 +1,97 @@
+---
+import type { ImageProps } from "./utils";
+
+type Props = ImageProps;
+const {
+  id,
+  src,
+  alt,
+  fallback,
+  class: className,
+  objectFit = "fill",
+  objectPosition = "center",
+} = Astro.props;
+---
+
+<core-image
+  class:list={["image", className]}
+  data-image-state="pending"
+  id={id}
+>
+  <img
+    class="source"
+    src={src}
+    alt={alt}
+    style={{ "object-fit": objectFit, "object-position": objectPosition }}
+  >
+  <span class="fallback">{fallback}</span>
+</core-image>
+
+<script>
+  import { getBySelector } from "~/lib/dom";
+
+  class CoreImage extends HTMLElement {
+    #wired = false;
+
+    connectedCallback(): void {
+      if (this.#wired) {
+        return;
+      }
+
+      this.#wired = true;
+
+      const image = getBySelector<HTMLImageElement>(this, "img");
+
+      // cached images can finish loading before this script runs
+      if (image.complete) {
+        this.dataset.imageState = image.naturalWidth > 0 ? "loaded" : "error";
+      }
+
+      image.addEventListener("load", () => {
+        this.dataset.imageState = "loaded";
+      });
+
+      image.addEventListener("error", () => {
+        this.dataset.imageState = "error";
+      });
+    }
+  }
+
+  customElements.define("core-image", CoreImage);
+</script>
+
+<style>
+  .image {
+    position: relative;
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+
+  .source {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: fill;
+    object-position: center;
+  }
+
+  .image:not([data-image-state="loaded"]) .source {
+    visibility: hidden;
+  }
+
+  .fallback {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--color-muted);
+    color: var(--color-text);
+    text-align: center;
+  }
+
+  .image[data-image-state="loaded"] .fallback {
+    display: none;
+  }
+</style>

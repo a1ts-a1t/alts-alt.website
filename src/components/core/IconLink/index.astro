@@ -1,0 +1,91 @@
+---
+import type { IconLinkProps } from "./utils";
+
+type Props = IconLinkProps;
+const {
+  "aria-label": ariaLabel,
+  src,
+  id,
+  href,
+  rel,
+  target,
+  color = "text",
+  size = "sm",
+  appearance = "ghosted",
+} = Astro.props;
+---
+
+<a
+  class:list={["root", `size-${size}`, `appearance-${appearance}`]}
+  aria-label={ariaLabel}
+  id={id}
+  href={href}
+  rel={rel}
+  target={target}
+  style={{
+    "--bg-image": `url(${src})`,
+    "--icon-color": `var(--color-${color})`,
+  }}
+>
+  <span class:list={["bg-clip", "icon"]} />
+</a>
+
+<style>
+  .root {
+    background-color: transparent;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .icon {
+    display: block;
+    background-color: var(--icon-color);
+    height: var(--icon-size);
+    width: var(--icon-size);
+  }
+
+  .size-sm {
+    height: 24px;
+    width: 24px;
+  }
+
+  .size-sm.appearance-ghosted {
+    --icon-size: 20px;
+  }
+
+  .size-md {
+    height: 32px;
+    width: 32px;
+  }
+
+  .size-md.appearance-ghosted {
+    --icon-size: 24px;
+  }
+
+  .size-lg {
+    height: 40px;
+    width: 40px;
+    --icon-size: 28px;
+  }
+
+  .size-lg.appearance-ghosted {
+    --icon-size: 28px;
+  }
+
+  .appearance-bordered {
+    border: 1px solid var(--icon-color);
+  }
+
+  .size-sm.appearance-bordered {
+    --icon-size: 12px;
+  }
+
+  .size-md.appearance-bordered {
+    --icon-size: 16px;
+  }
+
+  .size-lg.appearance-bordered {
+    --icon-size: 16px;
+  }
+</style>
