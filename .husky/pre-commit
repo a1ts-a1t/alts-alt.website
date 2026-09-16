@@ -1,0 +1,4 @@
+set -e
+npm run lint
+npm run build --silent
+npm run build:server --silent
