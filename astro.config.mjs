@@ -6,7 +6,9 @@ const isVpsTarget = process.env.PUBLIC_TARGET === "vps";
 
 export default defineConfig({
   ...(isVpsTarget ? { adapter: node({ mode: "standalone" }) } : {}),
-  site: isVpsTarget ? "https://alts-alt.online" : "https://alts-alt.neocities.org",
+  site: isVpsTarget
+    ? "https://alts-alt.online"
+    : "https://alts-alt.neocities.org",
   env: {
     schema: {
       PUBLIC_TARGET: envField.enum({
