@@ -1,0 +1,52 @@
+---
+import type { AstroInstance, MarkdownLayoutProps } from "astro";
+import Divider from "~/components/core/Divider";
+import Layout from "~/layouts/Layout.astro";
+
+interface Frontmatter {
+  title: string;
+  projectComponentPath: string;
+}
+
+type Props = MarkdownLayoutProps<Frontmatter>;
+
+const { title, projectComponentPath } = Astro.props.frontmatter;
+const projects = import.meta.glob<AstroInstance>(
+  "/src/components/pages/projects/**/*.astro",
+  { eager: true },
+);
+
+const [_, astroInstance] =
+  Object.entries(projects).find(([path]) => {
+    const projectPath = path
+      .replace(/\/index\.astro$/, "")
+      .replace(/^\/src/, "~"); // global alias
+    return projectComponentPath === projectPath;
+  }) ?? [];
+
+if (astroInstance === undefined) {
+  throw new Error(
+    `Unable to resolve project component path: ${projectComponentPath}`,
+  );
+}
+
+const ProjectComponent = astroInstance.default;
+---
+
+<Layout title={`alts-alt | ${title}`}>
+  <ProjectComponent />
+  <Divider />
+  <section class="description"><slot /></section>
+</Layout>
+
+<style>
+  .description {
+    display: flex;
+    flex-direction: column;
+    row-gap: 32px;
+  }
+
+  .description :global(astro-slot) {
+    display: contents;
+  }
+</style>

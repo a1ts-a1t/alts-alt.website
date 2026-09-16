@@ -1,0 +1,48 @@
+---
+import Chatbox from "./Chatbox.astro";
+
+interface Props {
+  children: astroHTML.JSX.Element;
+}
+---
+
+<div class="container">
+  <div class="dateContainer">
+    <div class="date" id="date" />
+  </div>
+  <Chatbox> <span class="joinChatbox">joined the room</span> </Chatbox>
+  <slot />
+</div>
+
+<style>
+  .container {
+    display: flex;
+    flex-direction: column;
+    row-gap: 24px;
+  }
+
+  .dateContainer {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    place-items: center;
+    justify-content: center;
+    text-align: center;
+  }
+
+  .date {
+    color: var(--color-muted);
+  }
+
+  .joinChatbox {
+    color: var(--color-secondary);
+  }
+</style>
+
+<script>
+  import { getById } from "~/lib/dom";
+
+  const dateEle = getById("date");
+
+  dateEle.textContent = new Date().toUTCString();
+</script>

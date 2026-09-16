@@ -1,0 +1,28 @@
+---
+interface Props {
+  username?: string;
+}
+
+const { username = "alts_alt_" } = Astro.props;
+---
+
+<div class="container">
+  <div class="username">{username}:</div>
+  <div><slot /></div>
+</div>
+
+<style>
+  .container {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    flex-wrap: nowrap;
+    align-items: flex-end;
+    column-gap: 16px;
+  }
+
+  .username {
+    color: var(--color-primary);
+    flex-shrink: 0;
+  }
+</style>
