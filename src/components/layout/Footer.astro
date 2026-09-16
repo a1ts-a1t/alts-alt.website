@@ -1,0 +1,127 @@
+---
+import githubIcon from "~/assets/icons/github.svg";
+import heartIcon from "~/assets/icons/heart.svg";
+import emailIcon from "~/assets/icons/mail.svg";
+import twitterIcon from "~/assets/icons/twitter.svg";
+import Divider from "~/components/core/Divider";
+import IconLink from "~/components/core/IconLink";
+import Image from "~/components/core/Image";
+import ResponsiveVisibility from "~/components/core/ResponsiveVisibility";
+
+type Props = Record<string, never>;
+---
+
+<footer>
+  <Divider color="muted" />
+  <div class="tagLine">
+    <span>made with</span>
+    <Image
+      class="heartIcon"
+      id="footer-heart"
+      src={heartIcon.src}
+      alt="Love"
+      fallback="♥"
+    />
+    <ResponsiveVisibility>
+      <span slot="xs">and a coffee</span>
+      <span>and a 16oz oat milk latte</span>
+    </ResponsiveVisibility>
+  </div>
+  <div class="links">
+    <IconLink
+      href="https://twitter.com/alts_alt_"
+      target="_blank"
+      rel="noopener noreferrer"
+      src={twitterIcon.src}
+      aria-label="Link to my Twitter page"
+      id="twitter-link"
+      color="muted"
+    />
+    <IconLink
+      href="https://github.com/a1ts-a1t"
+      target="_blank"
+      rel="noopener noreferrer"
+      src={githubIcon.src}
+      aria-label="Link to my GitHub page"
+      id="github-link"
+      color="muted"
+    />
+    <IconLink
+      href="mailto:unrelated@gmail.com"
+      target="_blank"
+      rel="noopener noreferrer"
+      src={emailIcon.src}
+      aria-label="Link to email me"
+      id="email-link"
+      color="muted"
+    />
+  </div>
+</footer>
+
+<style>
+  footer {
+    flex-shrink: 1;
+    color: var(--color-muted);
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 8px;
+  }
+
+  .tagLine {
+    margin: 0 auto;
+    display: flex;
+    width: fit-content;
+    flex-direction: row;
+    text-align: center;
+  }
+
+  :global(.heartIcon) {
+    width: 20px;
+    height: 20px;
+    margin: 0 8px;
+  }
+
+  .links {
+    margin: 0 auto;
+    display: flex;
+    width: fit-content;
+    flex-direction: row;
+    gap: 8px;
+    align-items: center;
+    padding: 8px 0;
+  }
+</style>
+
+<script>
+  import heartDarkHighContrastModeIcon from "~/assets/icons/heart-dark-high-contrast-mode.svg";
+  import heartDarkModeIcon from "~/assets/icons/heart-dark-mode.svg";
+  import heartHighContrastModeIcon from "~/assets/icons/heart-high-contrast-mode.svg";
+  import heartIcon from "~/assets/icons/heart.svg";
+  import { updateImage } from "~/components/core/Image/utils";
+  import {
+    contrastStore,
+    getNormalizedContrastMode,
+    getNormalizedTheme,
+    themeStore,
+  } from "~/lib/globalStore";
+
+  const updateHeartIcon = () => {
+    const theme = getNormalizedTheme();
+    const contrastMode = getNormalizedContrastMode();
+
+    if (theme === "dark" && contrastMode === "high") {
+      updateImage("footer-heart", {
+        src: heartDarkHighContrastModeIcon.src,
+      });
+    } else if (theme === "dark") {
+      updateImage("footer-heart", { src: heartDarkModeIcon.src });
+    } else if (contrastMode === "high") {
+      updateImage("footer-heart", { src: heartHighContrastModeIcon.src });
+    } else {
+      updateImage("footer-heart", { src: heartIcon.src });
+    }
+  };
+
+  themeStore.subscribe(updateHeartIcon);
+  contrastStore.subscribe(updateHeartIcon);
+</script>
