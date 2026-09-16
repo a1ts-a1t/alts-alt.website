@@ -1,0 +1,93 @@
+---
+import Select from "~/components/core/Select/index.astro";
+import Option from "~/components/core/Select/Option.astro";
+import { ColorMetric, ColorReducer } from "./utils";
+
+type Props = Record<string, never>;
+
+const colorMetricEntries = (
+  Object.keys(ColorMetric) as (keyof typeof ColorMetric)[]
+).map((key) => ({
+  id: `palette-posterizer-color-metric-${key}`,
+  label: ColorMetric[key],
+}));
+
+const colorReducerEntries = (
+  Object.keys(ColorReducer) as (keyof typeof ColorReducer)[]
+).map((key) => ({
+  id: `palette-posterizer-color-reducer-${key}`,
+  label: ColorReducer[key],
+}));
+---
+
+<div id="palette-posterizer-options" class="options" hidden>
+  <Select
+    id="palette-posterizer-color-metric-select"
+    label="Select a color metric"
+    placeholder="Color metric..."
+  >
+    {colorMetricEntries.map(({ id, label }) => (
+        <Option id={id} label={label} value={label} />
+      ))}
+  </Select>
+  <Select
+    id="palette-posterizer-color-reducer-select"
+    label="Select a color reducer"
+    placeholder="Color reducer..."
+    placement="right"
+  >
+    {colorReducerEntries.map(({ id, label }) => (
+        <Option id={id} label={label} value={label} />
+      ))}
+  </Select>
+</div>
+
+<style>
+  .options {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 100%;
+    font-size: var(--font-sm);
+  }
+
+  .options[hidden] {
+    display: none;
+  }
+
+  @media (--sm) {
+    .options {
+      flex-direction: row;
+    }
+  }
+</style>
+
+<script>
+  import { listenKeys } from "nanostores";
+  import { createSelect } from "~/components/core/Select/utils";
+  import { getById } from "~/lib/dom";
+  import { stateStore } from "./state";
+  import { ColorMetric, ColorReducer } from "./utils";
+
+  const root = getById("palette-posterizer-options");
+
+  listenKeys(stateStore, ["image"], ({ image }) => {
+    root.hidden = image === undefined;
+  });
+
+  createSelect<ColorMetric>({
+    id: "palette-posterizer-color-metric-select",
+    defaultSelected: ColorMetric.EUCLIDEAN_RGB,
+    onSelectChange: (colorMetric) => {
+      stateStore.setKey("colorMetric", colorMetric);
+    },
+  });
+
+  createSelect<ColorReducer>({
+    id: "palette-posterizer-color-reducer-select",
+    defaultSelected: ColorReducer.PALETTE,
+    onSelectChange: (colorReducer) => {
+      stateStore.setKey("colorReducer", colorReducer);
+    },
+  });
+</script>

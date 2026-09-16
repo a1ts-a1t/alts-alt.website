@@ -1,0 +1,154 @@
+---
+import clipboardIcon from "~/assets/icons/clipboard.svg";
+import downloadIcon from "~/assets/icons/download.svg";
+import eraserIcon from "~/assets/icons/eraser.svg";
+import pencilIcon from "~/assets/icons/pencil.svg";
+import undoIcon from "~/assets/icons/undo.svg";
+import IconButton from "~/components/core/IconButton";
+import IconLink from "~/components/core/IconLink";
+import Canvas from "./Canvas.astro";
+---
+
+<div class="tools">
+  <div class="controls">
+    <IconButton
+      aria-label="Enable draw mode"
+      src={pencilIcon.src}
+      color="text"
+      id="draw-mode-button"
+      appearance="bordered"
+      size="md"
+    />
+    <IconButton
+      aria-label="Enable eraser mode"
+      src={eraserIcon.src}
+      color="muted"
+      id="erase-mode-button"
+      appearance="bordered"
+      size="md"
+    />
+    <IconButton
+      aria-label="Undo"
+      src={undoIcon.src}
+      color="text"
+      id="undo-history-button"
+      appearance="bordered"
+      size="md"
+    />
+    <input id="pixel-color-input" class="color-input" type="color">
+  </div>
+  <div class="downloads">
+    <IconLink
+      aria-label="Download pixel art as SVG"
+      src={downloadIcon.src}
+      id="download-svg-anchor"
+      href=""
+      appearance="bordered"
+      size="md"
+    />
+    <IconButton
+      aria-label="Copy pixel art to clipboard as SVG"
+      src={clipboardIcon.src}
+      id="copy-svg-button"
+      appearance="bordered"
+      size="md"
+    />
+  </div>
+</div>
+<Canvas />
+
+<style>
+  .tools {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin: 8px 0;
+  }
+
+  .controls {
+    display: flex;
+    flex-direction: row;
+    gap: 8px;
+  }
+
+  .color-input {
+    height: 32px;
+    width: 32px;
+    padding: 0;
+    border: 1px solid var(--color-text);
+    background-color: transparent;
+    cursor: pointer;
+  }
+
+  .color-input::-webkit-color-swatch-wrapper {
+    padding: 0;
+  }
+
+  .color-input::-webkit-color-swatch {
+    border: none;
+  }
+
+  .color-input::-moz-color-swatch {
+    border: none;
+  }
+
+  .downloads {
+    display: flex;
+    flex-direction: row;
+    gap: 8px;
+  }
+</style>
+
+<script>
+  import { listenKeys } from "nanostores";
+  import { updateIconButton } from "~/components/core/IconButton/utils";
+  import { updateIconLink } from "~/components/core/IconLink/utils";
+  import { Color } from "~/lib/color";
+  import { getById } from "~/lib/dom";
+  import { Mode, stateStore, undoFromHistory } from "./state";
+  import { svgStringStore } from "./svg";
+
+  const drawModeButton = getById("draw-mode-button");
+  drawModeButton.addEventListener("click", () => {
+    stateStore.setKey("mode", Mode.DRAW);
+  });
+
+  const eraseModeButton = getById("erase-mode-button");
+  eraseModeButton.addEventListener("click", () => {
+    stateStore.setKey("mode", Mode.ERASE);
+  });
+
+  listenKeys(stateStore, ["mode"], (state) => {
+    updateIconButton("draw-mode-button", {
+      color: state.mode === Mode.DRAW ? "text" : "muted",
+    });
+
+    updateIconButton("erase-mode-button", {
+      color: state.mode === Mode.ERASE ? "text" : "muted",
+    });
+  });
+
+  getById("copy-svg-button").addEventListener("click", () => {
+    navigator.clipboard.writeText(svgStringStore.get());
+  });
+
+  svgStringStore.listen((svgString) => {
+    updateIconLink("download-svg-anchor", {
+      href: URL.createObjectURL(
+        new Blob([svgString], { type: "image/svg+xml" }),
+      ),
+    });
+  });
+
+  getById("undo-history-button").addEventListener("click", undoFromHistory);
+
+  const colorInput = getById<HTMLInputElement>("pixel-color-input");
+  colorInput.addEventListener("change", (e) => {
+    const value = (e.currentTarget as HTMLInputElement).value;
+    stateStore.setKey("color", Color.fromHexString(value));
+  });
+
+  listenKeys(stateStore, ["color"], (state) => {
+    colorInput.value = state.color.asHexString();
+  });
+</script>

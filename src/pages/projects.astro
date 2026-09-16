@@ -1,0 +1,112 @@
+---
+import palettePosterizationPreviewDark from "~/assets/images/project-previews/palette-posterization-preview-dark.png";
+import pixelSvgMakerPreviewDark from "~/assets/images/project-previews/pixel-svg-maker-preview-dark.png";
+import Image from "~/components/core/Image";
+import Chat from "~/components/layout/Chat.astro";
+import Chatbox from "~/components/layout/Chatbox.astro";
+import Window from "~/components/pages/projects/Window.astro";
+import Layout from "~/layouts/Layout.astro";
+
+const KENNEL_CLUB_PREVIEW_URL = "https://alts-alt.online/api/kennel-club/img";
+---
+
+<Layout title="alts-alt | Projects">
+  <Chat>
+    <Chatbox>here’s some stuff i've worked on in my free time</Chatbox>
+    <Chatbox>check it out !!</Chatbox>
+    <div class="projects">
+      <Window
+        title="Pixel SVG Maker"
+        description="A web app for exporting pixel art to SVG"
+        link="/projects/pixel-svg-maker"
+      >
+        <a class="previewLink" href="/projects/pixel-svg-maker">
+          <Image
+            id="pixel-svg-maker-preview"
+            src={pixelSvgMakerPreviewDark.src}
+            alt="Pixel SVG Maker preview"
+            fallback="Loading Pixel SVG Maker preview..."
+            objectFit="cover"
+            objectPosition="top"
+          />
+        </a>
+      </Window>
+      <Window
+        title="Palette Posterizer"
+        description="A web app for customizable posterization"
+        link="/projects/palette-posterizer"
+      >
+        <a class="previewLink" href="/projects/palette-posterizer">
+          <Image
+            id="palette-posterizer-preview"
+            src={palettePosterizationPreviewDark.src}
+            alt="Palette Posterizer preview"
+            fallback="Loading Palette Posterizer preview..."
+            objectFit="cover"
+          />
+        </a>
+      </Window>
+      <Window
+        title="Kennel Club"
+        description="A web ring with creature sprites"
+        link="/projects/kennel-club"
+      >
+        <a class="previewLink" href="/projects/kennel-club">
+          <Image
+            id="kennel-club-preview"
+            src={KENNEL_CLUB_PREVIEW_URL}
+            alt="Kennel Club preview"
+            fallback="Loading Kennel Club preview..."
+            objectFit="cover"
+          />
+        </a>
+      </Window>
+    </div>
+  </Chat>
+</Layout>
+
+<style>
+  .projects {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  @media (--md) {
+    .projects {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  .previewLink {
+    position: relative;
+    display: block;
+    height: 256px;
+  }
+</style>
+
+<script>
+  import palettePosterizationPreview from "~/assets/images/project-previews/palette-posterization-preview.png";
+  import palettePosterizationPreviewDark from "~/assets/images/project-previews/palette-posterization-preview-dark.png";
+  import pixelSvgMakerPreview from "~/assets/images/project-previews/pixel-svg-maker-preview.png";
+  import pixelSvgMakerPreviewDark from "~/assets/images/project-previews/pixel-svg-maker-preview-dark.png";
+  import { updateImage } from "~/components/core/Image/utils";
+  import { getNormalizedTheme, themeStore } from "~/lib/globalStore";
+
+  themeStore.subscribe((value) => {
+    const theme = getNormalizedTheme(value);
+    updateImage("pixel-svg-maker-preview", {
+      src:
+        theme === "dark"
+          ? pixelSvgMakerPreviewDark.src
+          : pixelSvgMakerPreview.src,
+    });
+    updateImage("palette-posterizer-preview", {
+      src:
+        theme === "dark"
+          ? palettePosterizationPreviewDark.src
+          : palettePosterizationPreview.src,
+    });
+  });
+</script>

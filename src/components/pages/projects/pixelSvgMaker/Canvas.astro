@@ -1,0 +1,115 @@
+---
+type Props = Record<string, never>;
+---
+
+<div id="pixel-svg-maker-canvas-container">
+  <canvas id="pixel-svg-maker-canvas" />
+</div>
+
+<style>
+  #pixel-svg-maker-canvas-container {
+    display: flex;
+    aspect-ratio: 1 / 1;
+    height: 100%;
+    justify-items: center;
+    align-items: center;
+  }
+
+  canvas {
+    touch-action: none;
+  }
+</style>
+
+<script>
+  import { listenKeys } from "nanostores";
+  import { getById } from "~/lib/dom";
+  import { pixelsForEach } from "./pixels";
+  import type { State } from "./state";
+  import { addToHistory, modifyAt, stateStore } from "./state";
+
+  const canvas = getById<HTMLCanvasElement>("pixel-svg-maker-canvas");
+  const container = getById("pixel-svg-maker-canvas-container");
+
+  export const renderCanvas = (canvas: HTMLCanvasElement, state: State) => {
+    const context = canvas.getContext("2d");
+    if (context === null) {
+      return;
+    }
+
+    const pixelSideLength = context.canvas.width / 16;
+    pixelsForEach(state.pixels, (color, { x, y }) => {
+      const computeFillStyle = () => {
+        if (color !== undefined) {
+          return color.asRgbString();
+        }
+
+        if ((x + y) % 2 === 0) {
+          return "#eaeaea";
+        }
+
+        return "#dadada";
+      };
+
+      context.fillStyle = computeFillStyle();
+      context.fillRect(
+        x * pixelSideLength,
+        y * pixelSideLength,
+        pixelSideLength,
+        pixelSideLength,
+      );
+    });
+  };
+
+  const resizeObserver = new ResizeObserver((entries) => {
+    const container = entries[0];
+    const containerSideLength = container.contentRect.width;
+    canvas.width = containerSideLength;
+    canvas.height = containerSideLength;
+    renderCanvas(canvas, stateStore.get());
+  });
+
+  resizeObserver.observe(container);
+  listenKeys(stateStore, ["pixels"], (state) => {
+    renderCanvas(canvas, state);
+  });
+
+  const modifyAtCanvasPosition = (canvasX: number, canvasY: number) => {
+    const rect = canvas.getBoundingClientRect();
+    const clickX = canvasX - rect.left;
+    const clickY = canvasY - rect.top;
+
+    const pixelSideLength = canvas.width / 16;
+    const pixelX = Math.floor(clickX / pixelSideLength);
+    const pixelY = Math.floor(clickY / pixelSideLength);
+
+    modifyAt(pixelX, pixelY);
+  };
+
+  const touches = new Set<number>();
+  canvas.addEventListener("pointerdown", (e) => {
+    const { pageX, pageY, pointerId } = e;
+    touches.add(pointerId);
+    modifyAtCanvasPosition(pageX, pageY);
+  });
+
+  canvas.addEventListener("pointercancel", (e) => {
+    const { pointerId } = e;
+    if (touches.has(pointerId)) {
+      touches.delete(pointerId);
+      addToHistory();
+    }
+  });
+
+  canvas.addEventListener("pointermove", (e) => {
+    const { pageX, pageY, pointerId } = e;
+    touches.has(pointerId) && modifyAtCanvasPosition(pageX, pageY);
+  });
+
+  canvas.addEventListener("pointerup", (e) => {
+    const { pointerId } = e;
+    if (touches.has(pointerId)) {
+      touches.delete(pointerId);
+      addToHistory();
+    }
+  });
+</script>

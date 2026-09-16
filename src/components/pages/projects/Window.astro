@@ -1,0 +1,65 @@
+---
+import linkIcon from "~/assets/icons/link.svg";
+import IconLink from "~/components/core/IconLink";
+
+interface Props {
+  title: string;
+  description: string;
+  link?: string;
+  target?: astroHTML.JSX.HTMLAttributeAnchorTarget;
+  rel?: string;
+}
+
+const { title, description, link, target, rel } = Astro.props;
+---
+
+<article class="window">
+  <header class="titleBar">
+    <h2 class="title">{title}</h2>
+    {link && (
+        <IconLink
+          aria-label={`Open ${title}`}
+          src={linkIcon.src}
+          href={link}
+          target={target}
+          rel={rel}
+        />
+      )}
+  </header>
+  <p class="description">{description}</p>
+  <slot />
+</article>
+
+<style>
+  .window {
+    display: flex;
+    flex-direction: column;
+    height: fit-content;
+    border: 1px solid var(--color-text);
+    min-width: 0;
+  }
+  .titleBar {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--color-text);
+    padding: 8px;
+  }
+
+  .title {
+    font-size: inherit;
+    font-weight: normal;
+  }
+
+  .description {
+    border-bottom: 1px solid var(--color-text);
+    color: var(--color-muted);
+    padding: 4px 8px;
+    font-size: var(--font-sm);
+    min-width: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+</style>
