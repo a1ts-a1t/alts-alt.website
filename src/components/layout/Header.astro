@@ -111,15 +111,18 @@ type Props = Record<string, never>;
   import { getById } from "~/lib/dom";
   import {
     contrastStore,
-    getNormalizedContrastMode,
-    getNormalizedMotionMode,
-    getNormalizedTheme,
+    getContrastMode,
+    getMotionMode,
+    getThemeMode,
     motionStore,
+    normalizeLocalStoreContrastMode,
+    normalizeLocalStoreMotionMode,
+    normalizeLocalStoreThemeMode,
     themeStore,
-  } from "~/lib/globalStore";
+  } from "~/lib/settings";
 
   themeStore.subscribe((value) => {
-    const theme = getNormalizedTheme(value);
+    const theme = normalizeLocalStoreThemeMode(value);
     if (theme === "dark") {
       updateIconButton("theme-button", {
         "aria-label": "Enable light mode",
@@ -143,7 +146,7 @@ type Props = Record<string, never>;
   });
 
   const toggleTheme = () => {
-    const theme = getNormalizedTheme();
+    const theme = getThemeMode();
     if (theme === "dark") {
       themeStore.set("light");
     } else {
@@ -156,7 +159,7 @@ type Props = Record<string, never>;
   getById("theme-menuitem").addEventListener("click", toggleTheme);
 
   contrastStore.subscribe((value) => {
-    const contrastMode = getNormalizedContrastMode(value);
+    const contrastMode = normalizeLocalStoreContrastMode(value);
     if (contrastMode === "default") {
       updateIconButton("contrast-button", {
         "aria-label": "Enable high contrast mode",
@@ -180,7 +183,7 @@ type Props = Record<string, never>;
   });
 
   const toggleContrastMode = () => {
-    const contrastMode = getNormalizedContrastMode();
+    const contrastMode = getContrastMode();
     if (contrastMode === "default") {
       contrastStore.set("high");
     } else {
@@ -193,7 +196,7 @@ type Props = Record<string, never>;
   getById("contrast-menuitem").addEventListener("click", toggleContrastMode);
 
   motionStore.subscribe((value) => {
-    const motionMode = getNormalizedMotionMode(value);
+    const motionMode = normalizeLocalStoreMotionMode(value);
     if (motionMode === "default") {
       updateIconButton("motion-button", {
         "aria-label": "Enable reduced motion mode",
@@ -217,7 +220,7 @@ type Props = Record<string, never>;
   });
 
   const toggleMotionMode = () => {
-    const motionMode = getNormalizedMotionMode();
+    const motionMode = getMotionMode();
     if (motionMode === "default") {
       motionStore.set("reduced");
     } else {

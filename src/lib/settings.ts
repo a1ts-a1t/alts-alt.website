@@ -1,19 +1,25 @@
 import { persistentAtom } from "@nanostores/persistent";
 
-export const themeStore = persistentAtom<"light" | "dark" | "system">(
+export type ThemeMode = "light" | "dark";
+export type ContrastMode = "default" | "high";
+export type MotionMode = "default" | "reduced";
+
+type LocalStoreValue<T extends string> = T | "system";
+
+export const themeStore = persistentAtom<LocalStoreValue<ThemeMode>>(
   "theme",
   "system",
 );
-export const contrastStore = persistentAtom<"default" | "high" | "system">(
+export const contrastStore = persistentAtom<LocalStoreValue<ContrastMode>>(
   "contrast",
   "system",
 );
-export const motionStore = persistentAtom<"default" | "reduced" | "system">(
+export const motionStore = persistentAtom<LocalStoreValue<MotionMode>>(
   "motion",
   "system",
 );
 
-export const initializeStores = () => {
+export const initializeStores = (): void => {
   themeStore.subscribe((value) => {
     const isSystemDark =
       value === "system" &&
@@ -47,56 +53,66 @@ export const initializeStores = () => {
   });
 };
 
-export const getNormalizedTheme = (value?: "light" | "dark" | "system") => {
-  const themeStoreValue = value ?? themeStore.get();
+export const normalizeLocalStoreThemeMode = (
+  value: LocalStoreValue<ThemeMode>,
+): ThemeMode => {
   const isSystemDark =
-    themeStoreValue === "system" &&
+    value === "system" &&
     window.matchMedia("(prefers-color-scheme: dark)").matches;
   if (isSystemDark) {
     return "dark";
   }
 
-  if (themeStoreValue === "system") {
+  if (value === "system") {
     return "light";
   }
 
-  return themeStoreValue;
+  return value;
 };
 
-export const getNormalizedContrastMode = (
-  value?: "default" | "high" | "system",
-) => {
-  const contrastStoreValue = value ?? contrastStore.get();
+export const getThemeMode = (): ThemeMode => {
+  return normalizeLocalStoreThemeMode(themeStore.get());
+};
+
+export const normalizeLocalStoreContrastMode = (
+  value: LocalStoreValue<ContrastMode>,
+): ContrastMode => {
   const isSystemHighContrast =
-    contrastStoreValue === "system" &&
-    window.matchMedia("(prefers-contrast: more)").matches;
+    value === "system" && window.matchMedia("(prefers-contrast: more)").matches;
 
   if (isSystemHighContrast) {
     return "high";
   }
 
-  if (contrastStoreValue === "system") {
+  if (value === "system") {
     return "default";
   }
 
-  return contrastStoreValue;
+  return value;
 };
 
-export const getNormalizedMotionMode = (
-  value?: "default" | "reduced" | "system",
-) => {
-  const motionStoreValue = value ?? motionStore.get();
+export const getContrastMode = (): ContrastMode => {
+  return normalizeLocalStoreContrastMode(contrastStore.get());
+};
+
+export const normalizeLocalStoreMotionMode = (
+  value: LocalStoreValue<MotionMode>,
+): MotionMode => {
   const isSystemReducedMotion =
-    motionStoreValue === "system" &&
+    value === "system" &&
     window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
   if (isSystemReducedMotion) {
     return "reduced";
   }
 
-  if (motionStoreValue === "system") {
+  if (value === "system") {
     return "default";
   }
 
-  return motionStoreValue;
+  return value;
+};
+
+export const getMotionMode = () => {
+  return normalizeLocalStoreMotionMode(motionStore.get());
 };

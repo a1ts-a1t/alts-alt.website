@@ -1,5 +1,7 @@
 ---
+import palettePosterizationPreview from "~/assets/images/project-previews/palette-posterization-preview.png";
 import palettePosterizationPreviewDark from "~/assets/images/project-previews/palette-posterization-preview-dark.png";
+import pixelSvgMakerPreview from "~/assets/images/project-previews/pixel-svg-maker-preview.png";
 import pixelSvgMakerPreviewDark from "~/assets/images/project-previews/pixel-svg-maker-preview-dark.png";
 import Image from "~/components/core/Image";
 import Chat from "~/components/layout/Chat.astro";
@@ -23,11 +25,15 @@ const KENNEL_CLUB_PREVIEW_URL = "https://alts-alt.online/api/kennel-club/img";
         <a class="previewLink" href="/projects/pixel-svg-maker">
           <Image
             id="pixel-svg-maker-preview"
-            src={pixelSvgMakerPreviewDark.src}
+            src={pixelSvgMakerPreviewDark}
             alt="Pixel SVG Maker preview"
             fallback="Loading Pixel SVG Maker preview..."
             objectFit="cover"
             objectPosition="top"
+            variants={{
+              default: pixelSvgMakerPreview,
+              dark: pixelSvgMakerPreviewDark,
+            }}
           />
         </a>
       </Window>
@@ -39,10 +45,14 @@ const KENNEL_CLUB_PREVIEW_URL = "https://alts-alt.online/api/kennel-club/img";
         <a class="previewLink" href="/projects/palette-posterizer">
           <Image
             id="palette-posterizer-preview"
-            src={palettePosterizationPreviewDark.src}
+            src={palettePosterizationPreviewDark}
             alt="Palette Posterizer preview"
             fallback="Loading Palette Posterizer preview..."
             objectFit="cover"
+            variants={{
+              default: palettePosterizationPreview,
+              dark: palettePosterizationPreviewDark,
+            }}
           />
         </a>
       </Window>
@@ -58,6 +68,8 @@ const KENNEL_CLUB_PREVIEW_URL = "https://alts-alt.online/api/kennel-club/img";
             alt="Kennel Club preview"
             fallback="Loading Kennel Club preview..."
             objectFit="cover"
+            width={2048}
+            height={2048}
           />
         </a>
       </Window>
@@ -87,26 +99,11 @@ const KENNEL_CLUB_PREVIEW_URL = "https://alts-alt.online/api/kennel-club/img";
 </style>
 
 <script>
-  import palettePosterizationPreview from "~/assets/images/project-previews/palette-posterization-preview.png";
-  import palettePosterizationPreviewDark from "~/assets/images/project-previews/palette-posterization-preview-dark.png";
-  import pixelSvgMakerPreview from "~/assets/images/project-previews/pixel-svg-maker-preview.png";
-  import pixelSvgMakerPreviewDark from "~/assets/images/project-previews/pixel-svg-maker-preview-dark.png";
-  import { updateImage } from "~/components/core/Image/utils";
-  import { getNormalizedTheme, themeStore } from "~/lib/globalStore";
+  import { getImageVariant, updateImage } from "~/components/core/Image/utils";
+  import { themeStore } from "~/lib/settings";
 
-  themeStore.subscribe((value) => {
-    const theme = getNormalizedTheme(value);
-    updateImage("pixel-svg-maker-preview", {
-      src:
-        theme === "dark"
-          ? pixelSvgMakerPreviewDark.src
-          : pixelSvgMakerPreview.src,
-    });
-    updateImage("palette-posterizer-preview", {
-      src:
-        theme === "dark"
-          ? palettePosterizationPreviewDark.src
-          : palettePosterizationPreview.src,
-    });
+  themeStore.subscribe(() => {
+    updateImage("pixel-svg-maker-preview", { variant: getImageVariant() });
+    updateImage("palette-posterizer-preview", { variant: getImageVariant() });
   });
 </script>

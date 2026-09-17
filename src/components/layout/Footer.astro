@@ -100,14 +100,14 @@ type Props = Record<string, never>;
   import { updateImage } from "~/components/core/Image/utils";
   import {
     contrastStore,
-    getNormalizedContrastMode,
-    getNormalizedTheme,
+    getContrastMode,
+    getThemeMode,
     themeStore,
-  } from "~/lib/globalStore";
+  } from "~/lib/settings";
 
   const updateHeartIcon = () => {
-    const theme = getNormalizedTheme();
-    const contrastMode = getNormalizedContrastMode();
+    const theme = getThemeMode();
+    const contrastMode = getContrastMode();
 
     if (theme === "dark" && contrastMode === "high") {
       updateImage("footer-heart", {
