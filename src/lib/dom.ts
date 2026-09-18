@@ -43,6 +43,18 @@ export function getBySelector<T extends HTMLElement = HTMLElement>(
   return node as T;
 }
 
+export type NodeIdentifier<T extends HTMLElement = HTMLElement> = T | string;
+
+export function resolveRootNode<T extends HTMLElement = HTMLElement>(
+  nodeIdentifier: NodeIdentifier<T>,
+): T {
+  if (typeof nodeIdentifier === "string") {
+    return getById<T>(nodeIdentifier);
+  }
+
+  return nodeIdentifier;
+}
+
 export const killEvent = (e: Event) => {
   e.stopPropagation();
   e.preventDefault();

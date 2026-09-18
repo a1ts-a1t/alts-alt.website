@@ -19,7 +19,7 @@ const menuItems = PALETTE_OPTIONS.map(({ name, palette }, index) => ({
   <div class="menu-cell">
     <IconButton
       id="default-palettes-trigger"
-      src={dropdownIcon.src}
+      src={dropdownIcon}
       aria-label="Choose from default palettes"
       size="lg"
       appearance="bordered"
@@ -213,7 +213,7 @@ const menuItems = PALETTE_OPTIONS.map(({ name, palette }, index) => ({
     menuId: "default-palettes-menu",
     onOpenChange: (state) => {
       updateIconButton("default-palettes-trigger", {
-        src: state === "open" ? dropdownOpenIcon.src : dropdownIcon.src,
+        src: state === "open" ? dropdownOpenIcon : dropdownIcon,
         "aria-label":
           state === "open"
             ? "Close palettes menu"

@@ -1,8 +1,9 @@
+import { type IconSrc, updateIcon } from "~/components/core/Icon/utils";
 import type {
   IconButtonAppearance,
   IconButtonSize,
 } from "~/components/core/IconButton/utils";
-import { getById } from "~/lib/dom";
+import { getBySelector, type NodeIdentifier, resolveRootNode } from "~/lib/dom";
 import type { ColorToken } from "~/styles/tokens";
 
 export type IconLinkSize = IconButtonSize;
@@ -10,7 +11,7 @@ export type IconLinkAppearance = IconButtonAppearance;
 
 export type IconLinkProps = {
   "aria-label": string;
-  src: string;
+  src: IconSrc;
   href: string;
   id?: string;
   rel?: string;
@@ -20,18 +21,25 @@ export type IconLinkProps = {
   appearance?: IconLinkAppearance;
 };
 
+type UpdateIconLinkProps = Pick<
+  IconLinkProps,
+  "aria-label" | "color" | "href" | "src"
+>;
+
 export const updateIconLink = (
-  id: string,
-  { "aria-label": ariaLabel, src, color, href }: Partial<IconLinkProps>,
+  rootIdentifier: NodeIdentifier<HTMLAnchorElement>,
+  { "aria-label": ariaLabel, src, color, href }: Partial<UpdateIconLinkProps>,
 ): void => {
-  const link = getById(id);
+  const link = resolveRootNode(rootIdentifier);
+  const icon = getBySelector(link, ".icon");
 
   if (src !== undefined) {
-    link.style.setProperty("--bg-image", `url(${src})`);
+    updateIcon(icon, { src });
   }
 
   if (color !== undefined) {
-    link.style.setProperty("--icon-color", `var(--color-${color})`);
+    link.style.setProperty("--Link-color", `var(--color-${color})`);
+    updateIcon(icon, { color });
   }
 
   if (ariaLabel !== undefined) {

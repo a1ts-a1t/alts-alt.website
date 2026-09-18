@@ -21,44 +21,42 @@ type Props = Record<string, never>;
     <div class="toolbar">
       <IconButton
         aria-label="Enable light mode"
-        src={lightModeIcon.src}
+        src={lightModeIcon}
         id="theme-button"
       />
       <IconButton
         aria-label="Enable low contrast mode"
-        src={lowContrastIcon.src}
+        src={lowContrastIcon}
         id="contrast-button"
       />
       <IconButton
         aria-label="Enable reduced motion mode"
-        src={reducedMotionIcon.src}
+        src={reducedMotionIcon}
         id="motion-button"
       />
     </div>
     <span slot="xs">
       <IconButton
         id="config-menu-trigger"
-        src={configMenuClosedIcon.src}
+        src={configMenuClosedIcon}
         aria-label="Open config menu"
       />
       <Menu id="config-menu" placement="right">
         <MenuItem
           id="theme-menuitem"
-          iconSrc={lightModeIcon.src}
+          icon={lightModeIcon}
           label="Enable light mode"
         />
         <MenuItem
           id="contrast-menuitem"
-          iconSrc={lowContrastIcon.src}
+          icon={lowContrastIcon}
           label="Enable low contrast mode"
         />
         <MenuItem
           id="motion-menuitem"
-          iconSrc={reducedMotionIcon.src}
+          icon={reducedMotionIcon}
           label="Enable reduced motion mode"
         />
-        <MenuItem id="projects-menuitem" label="/projects" />
-        <MenuItem id="links-menuitem" label="/links" />
       </Menu>
     </span>
   </ResponsiveVisibility>
@@ -126,21 +124,21 @@ type Props = Record<string, never>;
     if (theme === "dark") {
       updateIconButton("theme-button", {
         "aria-label": "Enable light mode",
-        src: lightModeIcon.src,
+        src: lightModeIcon,
       });
       updateMenuItem("theme-menuitem", {
         label: "Enable light mode",
-        iconSrc: lightModeIcon.src,
+        icon: lightModeIcon,
       });
     } else {
       // light mode
       updateIconButton("theme-button", {
         "aria-label": "Enable dark mode",
-        src: darkModeIcon.src,
+        src: darkModeIcon,
       });
       updateMenuItem("theme-menuitem", {
         label: "Enable dark mode",
-        iconSrc: darkModeIcon.src,
+        icon: darkModeIcon,
       });
     }
   });
@@ -163,21 +161,21 @@ type Props = Record<string, never>;
     if (contrastMode === "default") {
       updateIconButton("contrast-button", {
         "aria-label": "Enable high contrast mode",
-        src: highContrastIcon.src,
+        src: highContrastIcon,
       });
       updateMenuItem("contrast-menuitem", {
         label: "Enable high contrast mode",
-        iconSrc: highContrastIcon.src,
+        icon: highContrastIcon,
       });
     } else {
       // high contrast mode
       updateIconButton("contrast-button", {
         "aria-label": "Disable high contrast mode",
-        src: lowContrastIcon.src,
+        src: lowContrastIcon,
       });
       updateMenuItem("contrast-menuitem", {
         label: "Disable high contrast mode",
-        iconSrc: lowContrastIcon.src,
+        icon: lowContrastIcon,
       });
     }
   });
@@ -200,21 +198,21 @@ type Props = Record<string, never>;
     if (motionMode === "default") {
       updateIconButton("motion-button", {
         "aria-label": "Enable reduced motion mode",
-        src: reducedMotionIcon.src,
+        src: reducedMotionIcon,
       });
       updateMenuItem("motion-menuitem", {
         label: "Enabled reduced motion mode",
-        iconSrc: reducedMotionIcon.src,
+        icon: reducedMotionIcon,
       });
     } else {
       // reduced motion mode
       updateIconButton("motion-button", {
         "aria-label": "Disable reduced motion mode",
-        src: noReducedMotionIcon.src,
+        src: noReducedMotionIcon,
       });
       updateMenuItem("motion-menuitem", {
         label: "Disable reduced motion mode",
-        iconSrc: noReducedMotionIcon.src,
+        icon: noReducedMotionIcon,
       });
     }
   });
@@ -239,24 +237,15 @@ type Props = Record<string, never>;
     onOpenChange: (state) => {
       if (state === "open") {
         updateIconButton("config-menu-trigger", {
-          src: configMenuOpenIcon.src,
+          src: configMenuOpenIcon,
           "aria-label": "Close config menu",
         });
       } else {
         updateIconButton("config-menu-trigger", {
-          src: configMenuClosedIcon.src,
+          src: configMenuClosedIcon,
           "aria-label": "Open config menu",
         });
       }
     },
-  });
-
-  // wire up mobile nav links
-  getById("projects-menuitem").addEventListener("click", () => {
-    window.location.assign("/projects");
-  });
-
-  getById("links-menuitem").addEventListener("click", () => {
-    window.location.assign("/links");
   });
 </script>

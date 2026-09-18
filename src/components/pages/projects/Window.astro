@@ -19,7 +19,7 @@ const { title, description, link, target, rel } = Astro.props;
     {link && (
         <IconLink
           aria-label={`Open ${title}`}
-          src={linkIcon.src}
+          src={linkIcon}
           href={link}
           target={target}
           rel={rel}

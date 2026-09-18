@@ -1,5 +1,6 @@
 ---
-import type { IconButtonProps } from "./utils";
+import Icon from "~/components/core/Icon";
+import { ICON_SIZE, type IconButtonProps } from "./utils";
 
 type Props = IconButtonProps;
 const {
@@ -10,6 +11,8 @@ const {
   size = "sm",
   appearance = "ghosted",
 } = Astro.props;
+
+const iconSize = ICON_SIZE[appearance][size];
 ---
 
 <button
@@ -18,11 +21,10 @@ const {
   id={id}
   type="button"
   style={{
-    "--bg-image": `url(${src})`,
-    "--icon-color": `var(--color-${color})`,
+    "--Button-color": `var(--color-${color})`,
   }}
 >
-  <span class:list={["bg-clip", "icon"]} />
+  <Icon color={color} size={iconSize} src={src} />
 </button>
 
 <style>
@@ -33,20 +35,9 @@ const {
     justify-content: center;
   }
 
-  .icon {
-    display: block;
-    background-color: var(--icon-color);
-    height: var(--icon-size);
-    width: var(--icon-size);
-  }
-
   .size-sm {
     height: 24px;
     width: 24px;
-  }
-
-  .size-sm.appearance-ghosted {
-    --icon-size: 20px;
   }
 
   .size-md {
@@ -54,33 +45,12 @@ const {
     width: 32px;
   }
 
-  .size-md.appearance-ghosted {
-    --icon-size: 24px;
-  }
-
   .size-lg {
     height: 40px;
     width: 40px;
-    --icon-size: 28px;
-  }
-
-  .size-lg.appearance-ghosted {
-    --icon-size: 28px;
   }
 
   .appearance-bordered {
-    border: 1px solid var(--icon-color);
-  }
-
-  .size-sm.appearance-bordered {
-    --icon-size: 12px;
-  }
-
-  .size-md.appearance-bordered {
-    --icon-size: 16px;
-  }
-
-  .size-lg.appearance-bordered {
-    --icon-size: 16px;
+    border: 1px solid var(--Button-color);
   }
 </style>

@@ -13,7 +13,7 @@ import Canvas from "./Canvas.astro";
   <div class="controls">
     <IconButton
       aria-label="Enable draw mode"
-      src={pencilIcon.src}
+      src={pencilIcon}
       color="text"
       id="draw-mode-button"
       appearance="bordered"
@@ -21,7 +21,7 @@ import Canvas from "./Canvas.astro";
     />
     <IconButton
       aria-label="Enable eraser mode"
-      src={eraserIcon.src}
+      src={eraserIcon}
       color="muted"
       id="erase-mode-button"
       appearance="bordered"
@@ -29,7 +29,7 @@ import Canvas from "./Canvas.astro";
     />
     <IconButton
       aria-label="Undo"
-      src={undoIcon.src}
+      src={undoIcon}
       color="text"
       id="undo-history-button"
       appearance="bordered"
@@ -40,7 +40,7 @@ import Canvas from "./Canvas.astro";
   <div class="downloads">
     <IconLink
       aria-label="Download pixel art as SVG"
-      src={downloadIcon.src}
+      src={downloadIcon}
       id="download-svg-anchor"
       href=""
       appearance="bordered"
@@ -48,7 +48,7 @@ import Canvas from "./Canvas.astro";
     />
     <IconButton
       aria-label="Copy pixel art to clipboard as SVG"
-      src={clipboardIcon.src}
+      src={clipboardIcon}
       id="copy-svg-button"
       appearance="bordered"
       size="md"

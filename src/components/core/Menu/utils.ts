@@ -1,13 +1,16 @@
+import { type IconSrc, updateIcon } from "~/components/core/Icon/utils";
 import {
   getById,
   getBySelector,
   killEvent,
+  type NodeIdentifier,
+  resolveRootNode,
   watchPopupPlacement,
 } from "~/lib/dom";
 
 export interface MenuItemProps {
   label: string;
-  iconSrc?: string;
+  icon?: IconSrc;
   id: string;
 }
 
@@ -278,16 +281,17 @@ export const createMenu = (menuConfig: MenuConfig) => {
   return new Menu(menuConfig);
 };
 
-export const updateMenuItem = (
-  id: string,
-  { iconSrc, label }: Partial<MenuItemProps>,
-): void => {
-  const menuItem = getById(id);
-  const labelNode = getBySelector(menuItem, ".label");
-  const iconNode = getBySelector(menuItem, ".icon");
+type UpdateMenuItemProps = Pick<MenuItemProps, "label" | "icon">;
 
-  if (iconSrc !== undefined) {
-    iconNode.style.setProperty("--bg-image", `url(${iconSrc})`);
+export const updateMenuItem = (
+  rootIdentifier: NodeIdentifier<HTMLLIElement>,
+  { icon, label }: Partial<UpdateMenuItemProps>,
+): void => {
+  const menuItem = resolveRootNode(rootIdentifier);
+  const labelNode = getBySelector(menuItem, ".label");
+
+  if (icon !== undefined) {
+    updateIcon(getBySelector(menuItem, ".icon"), { src: icon });
   }
 
   if (label !== undefined) {

@@ -1,0 +1,41 @@
+---
+import { type IconProps, SIZE_TO_PIXELS, toSrcUrl } from "./utils";
+
+type Props = IconProps;
+
+const {
+  color = "text",
+  id,
+  class: className,
+  style = {},
+  size = "sm",
+  src,
+} = Astro.props;
+
+const pixelSize = SIZE_TO_PIXELS[size];
+---
+
+<span
+  id={id}
+  class:list={["icon", className]}
+  aria-hidden="true"
+  style={{
+    "--Icon-color": `var(--color-${color})`,
+    "--Icon-size": `${pixelSize}px`,
+    "--Icon-src": `url(${toSrcUrl(src)})`,
+    ...style,
+  }}
+> </span>
+
+<style>
+  .icon {
+    display: block;
+    height: var(--Icon-size);
+    width: var(--Icon-size);
+    background-color: var(--Icon-color);
+    mask-image: var(--Icon-src);
+    mask-repeat: no-repeat;
+    mask-position: center;
+    mask-size: contain;
+  }
+</style>

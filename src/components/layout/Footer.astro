@@ -33,7 +33,7 @@ type Props = Record<string, never>;
       href="https://twitter.com/alts_alt_"
       target="_blank"
       rel="noopener noreferrer"
-      src={twitterIcon.src}
+      src={twitterIcon}
       aria-label="Link to my Twitter page"
       id="twitter-link"
       color="muted"
@@ -42,7 +42,7 @@ type Props = Record<string, never>;
       href="https://github.com/a1ts-a1t"
       target="_blank"
       rel="noopener noreferrer"
-      src={githubIcon.src}
+      src={githubIcon}
       aria-label="Link to my GitHub page"
       id="github-link"
       color="muted"
@@ -51,7 +51,7 @@ type Props = Record<string, never>;
       href="mailto:unrelated@gmail.com"
       target="_blank"
       rel="noopener noreferrer"
-      src={emailIcon.src}
+      src={emailIcon}
       aria-label="Link to email me"
       id="email-link"
       color="muted"
@@ -98,6 +98,7 @@ type Props = Record<string, never>;
   import heartDarkHighContrastModeIcon from "~/assets/icons/heart-dark-high-contrast-mode.svg";
   import heartDarkModeIcon from "~/assets/icons/heart-dark-mode.svg";
   import heartHighContrastModeIcon from "~/assets/icons/heart-high-contrast-mode.svg";
+  import { getById } from "~/lib/dom";
   import {
     contrastStore,
     getContrastMode,
@@ -105,8 +106,18 @@ type Props = Record<string, never>;
     themeStore,
   } from "~/lib/settings";
 
+  const heartIconEle = getById<HTMLImageElement>("footer-heart");
+
+  const heartIconSrc = {
+    light: { default: heartIcon.src, high: heartHighContrastModeIcon.src },
+    dark: {
+      default: heartDarkModeIcon.src,
+      high: heartDarkHighContrastModeIcon.src,
+    },
+  };
+
   const updateHeartIcon = () => {
-    // TODO
+    heartIconEle.src = heartIconSrc[getThemeMode()][getContrastMode()];
   };
 
   themeStore.subscribe(updateHeartIcon);

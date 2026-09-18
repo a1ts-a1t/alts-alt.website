@@ -1,5 +1,6 @@
 ---
 import checkmarkIcon from "~/assets/icons/checkmark.svg";
+import Icon from "~/components/core/Icon";
 import type { OptionProps } from "./utils";
 
 type Props = OptionProps;
@@ -16,11 +17,7 @@ const { label, value, id } = Astro.props;
   aria-selected="false"
 >
   <span class="label"> {label} </span>
-  <span
-    class:list={["bg-clip", "check"]}
-    style={{ "--bg-image": `url(${checkmarkIcon.src})` }}
-    aria-hidden="true"
-  />
+  <Icon class="check" src={checkmarkIcon} size="md" color="text" />
 </div>
 
 <style>
@@ -40,14 +37,11 @@ const { label, value, id } = Astro.props;
     border-bottom: none;
   }
 
-  .check {
-    background-color: var(--color-text);
-    height: 20px;
-    width: 20px;
+  .option :global(.check) {
     visibility: hidden;
   }
 
-  .option[aria-selected="true"] .check {
+  .option[aria-selected="true"] :global(.check) {
     visibility: visible;
   }
 
