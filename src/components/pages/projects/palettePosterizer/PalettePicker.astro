@@ -1,6 +1,6 @@
 ---
 import addIcon from "~/assets/icons/add.svg";
-import dropdownIcon from "~/assets/icons/dropdown.svg";
+import chevronDownIcon from "~/assets/icons/chevron-down.svg";
 import IconButton from "~/components/core/IconButton";
 import Menu from "~/components/core/Menu";
 import MenuItem from "~/components/core/Menu/MenuItem.astro";
@@ -19,7 +19,7 @@ const menuItems = PALETTE_OPTIONS.map(({ name, palette }, index) => ({
   <div class="menu-cell">
     <IconButton
       id="default-palettes-trigger"
-      src={dropdownIcon}
+      src={chevronDownIcon}
       aria-label="Choose from default palettes"
       size="lg"
       appearance="bordered"
@@ -191,8 +191,8 @@ const menuItems = PALETTE_OPTIONS.map(({ name, palette }, index) => ({
 <script>
   import { listenKeys } from "nanostores";
   import crosshairIcon from "~/assets/icons/crosshair.svg";
-  import dropdownIcon from "~/assets/icons/dropdown.svg";
-  import dropdownOpenIcon from "~/assets/icons/dropdown-open.svg";
+  import chevronDownIcon from "~/assets/icons/chevron-down.svg";
+  import chevronUpIcon from "~/assets/icons/chevron-up.svg";
   import { updateIconButton } from "~/components/core/IconButton/utils";
   import { createMenu } from "~/components/core/Menu/utils";
   import { Color } from "~/lib/color";
@@ -213,7 +213,7 @@ const menuItems = PALETTE_OPTIONS.map(({ name, palette }, index) => ({
     menuId: "default-palettes-menu",
     onOpenChange: (state) => {
       updateIconButton("default-palettes-trigger", {
-        src: state === "open" ? dropdownOpenIcon : dropdownIcon,
+        src: state === "open" ? chevronUpIcon : chevronDownIcon,
         "aria-label":
           state === "open"
             ? "Close palettes menu"
