@@ -1,4 +1,5 @@
 ---
+import closedFolderIcon from "~/assets/icons/closed-folder.svg";
 import configMenuClosedIcon from "~/assets/icons/config-menu-closed.svg";
 import lightModeIcon from "~/assets/icons/light-mode.svg";
 import lowContrastIcon from "~/assets/icons/low-contrast.svg";
@@ -6,7 +7,7 @@ import reducedMotionIcon from "~/assets/icons/reduced-motion.svg";
 import IconButton from "~/components/core/IconButton";
 import Menu from "~/components/core/Menu";
 import MenuItem from "~/components/core/Menu/MenuItem.astro";
-import ResponsiveVisibility from "~/components/core/ResponsiveVisibility";
+import MenuItemLink from "~/components/core/Menu/MenuItemLink.astro";
 
 type Props = Record<string, never>;
 ---
@@ -17,49 +18,62 @@ type Props = Record<string, never>;
     <a href="/links" aria-label="Links">/links</a>
     <a href="/projects" aria-label="Projects">/projects</a>
   </nav>
-  <ResponsiveVisibility>
-    <div class="toolbar">
-      <IconButton
-        aria-label="Enable light mode"
-        src={lightModeIcon}
-        id="theme-button"
-      />
-      <IconButton
-        aria-label="Enable low contrast mode"
-        src={lowContrastIcon}
-        id="contrast-button"
-      />
-      <IconButton
-        aria-label="Enable reduced motion mode"
-        src={reducedMotionIcon}
-        id="motion-button"
-      />
-    </div>
-    <span slot="xs">
-      <IconButton
-        id="config-menu-trigger"
-        src={configMenuClosedIcon}
-        aria-label="Open config menu"
-      />
-      <Menu id="config-menu" placement="right">
-        <MenuItem
-          id="theme-menuitem"
-          icon={lightModeIcon}
-          label="Enable light mode"
-        />
-        <MenuItem
-          id="contrast-menuitem"
-          icon={lowContrastIcon}
-          label="Enable low contrast mode"
-        />
-        <MenuItem
-          id="motion-menuitem"
-          icon={reducedMotionIcon}
-          label="Enable reduced motion mode"
-        />
-      </Menu>
-    </span>
-  </ResponsiveVisibility>
+  <div class="toolbar">
+    <IconButton
+      aria-label="Enable light mode"
+      src={lightModeIcon}
+      id="theme-button"
+    />
+    <IconButton
+      aria-label="Enable low contrast mode"
+      src={lowContrastIcon}
+      id="contrast-button"
+    />
+    <IconButton
+      aria-label="Enable reduced motion mode"
+      src={reducedMotionIcon}
+      id="motion-button"
+    />
+  </div>
+  <div class="mobileBar">
+    <IconButton
+      id="navbar-menu-trigger"
+      src={closedFolderIcon}
+      aria-label="Open navigation menu"
+    />
+    <a class="homeLink" href="/" aria-label="Home">alts-alt!</a>
+    <IconButton
+      id="config-menu-trigger"
+      src={configMenuClosedIcon}
+      aria-label="Open config menu"
+    />
+  </div>
+  <Menu id="navbar-menu" placement="left">
+    <MenuItemLink id="navbar-home-menuitem" label="$HOME" href="/" />
+    <MenuItemLink id="navbar-links-menuitem" label="/links" href="/links" />
+    <MenuItemLink
+      id="navbar-projects-menuitem"
+      label="/projects"
+      href="/projects"
+    />
+  </Menu>
+  <Menu id="config-menu" placement="right">
+    <MenuItem
+      id="theme-menuitem"
+      icon={lightModeIcon}
+      label="Enable light mode"
+    />
+    <MenuItem
+      id="contrast-menuitem"
+      icon={lowContrastIcon}
+      label="Enable low contrast mode"
+    />
+    <MenuItem
+      id="motion-menuitem"
+      icon={reducedMotionIcon}
+      label="Enable reduced motion mode"
+    />
+  </Menu>
 </header>
 
 <style>
@@ -73,7 +87,7 @@ type Props = Record<string, never>;
   }
 
   nav {
-    display: flex;
+    display: none;
     flex-direction: row;
     column-gap: 48px;
   }
@@ -89,13 +103,40 @@ type Props = Record<string, never>;
   }
 
   .toolbar {
-    display: flex;
+    display: none;
     flex-direction: row;
     column-gap: 4px;
+  }
+
+  .mobileBar {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+  }
+
+  .mobileBar a.homeLink {
+    flex: 0 0 50%;
+    text-align: center;
+    color: var(--color-primary);
+    font-weight: bold;
+  }
+
+  @media (--sm) {
+    nav,
+    .toolbar {
+      display: flex;
+    }
+
+    .mobileBar {
+      display: none;
+    }
   }
 </style>
 
 <script>
+  import closedFolderIcon from "~/assets/icons/closed-folder.svg";
   import configMenuClosedIcon from "~/assets/icons/config-menu-closed.svg";
   import configMenuOpenIcon from "~/assets/icons/config-menu-open.svg";
   import darkModeIcon from "~/assets/icons/dark-mode.svg";
@@ -103,6 +144,7 @@ type Props = Record<string, never>;
   import lightModeIcon from "~/assets/icons/light-mode.svg";
   import lowContrastIcon from "~/assets/icons/low-contrast.svg";
   import noReducedMotionIcon from "~/assets/icons/no-reduced-motion.svg";
+  import openFolderIcon from "~/assets/icons/open-folder.svg";
   import reducedMotionIcon from "~/assets/icons/reduced-motion.svg";
   import { updateIconButton } from "~/components/core/IconButton/utils";
   import { createMenu, updateMenuItem } from "~/components/core/Menu/utils";
@@ -244,6 +286,25 @@ type Props = Record<string, never>;
         updateIconButton("config-menu-trigger", {
           src: configMenuClosedIcon,
           "aria-label": "Open config menu",
+        });
+      }
+    },
+  });
+
+  // wire up navbar menu
+  createMenu({
+    triggerId: "navbar-menu-trigger",
+    menuId: "navbar-menu",
+    onOpenChange: (state) => {
+      if (state === "open") {
+        updateIconButton("navbar-menu-trigger", {
+          src: openFolderIcon,
+          "aria-label": "Close navigation menu",
+        });
+      } else {
+        updateIconButton("navbar-menu-trigger", {
+          src: closedFolderIcon,
+          "aria-label": "Open navigation menu",
         });
       }
     },

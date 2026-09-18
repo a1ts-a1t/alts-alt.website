@@ -14,6 +14,10 @@ export interface MenuItemProps {
   id: string;
 }
 
+export interface MenuItemLinkProps extends MenuItemProps {
+  href: string;
+}
+
 export interface MenuConfig {
   triggerId: string;
   menuId: string;
@@ -284,7 +288,7 @@ export const createMenu = (menuConfig: MenuConfig) => {
 type UpdateMenuItemProps = Pick<MenuItemProps, "label" | "icon">;
 
 export const updateMenuItem = (
-  rootIdentifier: NodeIdentifier<HTMLLIElement>,
+  rootIdentifier: NodeIdentifier<HTMLElement>,
   { icon, label }: Partial<UpdateMenuItemProps>,
 ): void => {
   const menuItem = resolveRootNode(rootIdentifier);

@@ -1,0 +1,48 @@
+---
+import Icon from "~/components/core/Icon";
+import type { MenuItemLinkProps } from "./utils";
+
+type Props = MenuItemLinkProps;
+
+const { label, icon, id, href } = Astro.props;
+---
+
+<li role="none">
+  <a role="menuitem" id={id} href={href}>
+    {icon && <Icon color="text" size="md" src={icon} />}
+    <span class="label"> {label} </span>
+    <span class="trailing"><slot name="trailing" /></span>
+  </a>
+</li>
+
+<style>
+  a[role="menuitem"] {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    column-gap: 8px;
+    padding: 8px;
+    border-bottom: 1px dotted var(--color-text);
+    color: var(--color-text);
+    cursor: pointer;
+    text-decoration: none;
+  }
+
+  li:last-child a[role="menuitem"] {
+    border-bottom: none;
+  }
+
+  .label {
+    flex-shrink: 0;
+  }
+
+  .focus .label {
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+
+  .trailing {
+    margin-inline-start: auto;
+    min-width: 0;
+  }
+</style>
