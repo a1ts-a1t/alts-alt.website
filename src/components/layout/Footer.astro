@@ -1,11 +1,11 @@
 ---
+import { Image } from "astro:assets";
 import githubIcon from "~/assets/icons/github.svg";
 import heartIcon from "~/assets/icons/heart.svg";
 import emailIcon from "~/assets/icons/mail.svg";
 import twitterIcon from "~/assets/icons/twitter.svg";
 import Divider from "~/components/core/Divider";
 import IconLink from "~/components/core/IconLink";
-import Image from "~/components/core/Image";
 import ResponsiveVisibility from "~/components/core/ResponsiveVisibility";
 
 type Props = Record<string, never>;
@@ -18,9 +18,10 @@ type Props = Record<string, never>;
     <Image
       class="heartIcon"
       id="footer-heart"
-      src={heartIcon.src}
+      src={heartIcon}
       alt="Love"
-      fallback="♥"
+      height={24}
+      width={24}
     />
     <ResponsiveVisibility>
       <span slot="xs">and a coffee</span>
@@ -97,7 +98,6 @@ type Props = Record<string, never>;
   import heartDarkHighContrastModeIcon from "~/assets/icons/heart-dark-high-contrast-mode.svg";
   import heartDarkModeIcon from "~/assets/icons/heart-dark-mode.svg";
   import heartHighContrastModeIcon from "~/assets/icons/heart-high-contrast-mode.svg";
-  import { updateImage } from "~/components/core/Image/utils";
   import {
     contrastStore,
     getContrastMode,
@@ -106,20 +106,7 @@ type Props = Record<string, never>;
   } from "~/lib/settings";
 
   const updateHeartIcon = () => {
-    const theme = getThemeMode();
-    const contrastMode = getContrastMode();
-
-    if (theme === "dark" && contrastMode === "high") {
-      updateImage("footer-heart", {
-        src: heartDarkHighContrastModeIcon.src,
-      });
-    } else if (theme === "dark") {
-      updateImage("footer-heart", { src: heartDarkModeIcon.src });
-    } else if (contrastMode === "high") {
-      updateImage("footer-heart", { src: heartHighContrastModeIcon.src });
-    } else {
-      updateImage("footer-heart", { src: heartIcon.src });
-    }
+    // TODO
   };
 
   themeStore.subscribe(updateHeartIcon);
