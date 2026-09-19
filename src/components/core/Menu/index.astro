@@ -25,11 +25,15 @@ const { id, placement = "left", maxHeight } = Astro.props;
     background-color: var(--color-bg);
     border: 1px dotted var(--color-text);
     position: absolute;
-    display: flex;
+    display: none;
     flex-direction: column;
     padding-inline-start: 0;
     max-height: var(--Menu-maxHeight, 512px);
     overflow-y: auto;
+  }
+
+  [role="menu"].open {
+    display: flex;
   }
 
   .placementRight {

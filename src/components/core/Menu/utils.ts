@@ -59,8 +59,6 @@ export class Menu {
     this.menuNode.setAttribute("aria-labelledby", triggerId);
     this.menuNode.setAttribute("tabindex", "-1");
 
-    this.menuNode.style.display = "none";
-
     // trigger event handlers
     this.triggerNode.addEventListener("click", (e) => {
       killEvent(e);
@@ -215,7 +213,7 @@ export class Menu {
       return;
     }
 
-    this.menuNode.style.display = "block";
+    this.menuNode.classList.add("open");
     this.unwatchPlacement = watchPopupPlacement({
       referenceNode: this.triggerNode,
       popupNode: this.menuNode,
@@ -240,7 +238,7 @@ export class Menu {
       menuItem.classList.remove("focus");
     }
 
-    this.menuNode.style.display = "none";
+    this.menuNode.classList.remove("open");
     this.triggerNode.focus();
     this.onOpenChange?.("close");
   }
