@@ -1,0 +1,102 @@
+---
+import Icon from "~/components/core/Icon";
+import type { IconSrc } from "~/components/core/Icon/utils";
+
+interface Props {
+  name: string;
+  href: string;
+  "aria-label"?: string;
+  src?: IconSrc;
+  color?: string;
+  /** Mask color override for light high-contrast mode. */
+  contrastColor?: string;
+}
+
+const {
+  name,
+  href,
+  src,
+  color,
+  contrastColor,
+  "aria-label": ariaLabel,
+} = Astro.props;
+
+const cardStyle: Record<string, string> = {};
+if (color !== undefined) {
+  cardStyle["--brand-color"] = color;
+}
+
+if (contrastColor !== undefined) {
+  cardStyle["--brand-contrast-color"] = contrastColor;
+}
+---
+
+<a
+  class="card"
+  href={href}
+  target="_blank"
+  rel="noopener noreferrer"
+  aria-label={ariaLabel ?? `Link to ${name}`}
+  style={cardStyle}
+>
+  <div class="content">
+    <span class="iconFrame">
+      <slot name="icon">
+        {src !== undefined && (
+          <Icon src={src} />
+        )}
+      </slot>
+    </span>
+    <div class="label">{name.toLowerCase()}</div>
+  </div>
+</a>
+
+<style>
+  .card {
+    --Icon-color: var(--brand-color, var(--color-text));
+    --Icon-size: 32px;
+    color: var(--color-text);
+    display: flex;
+    align-items: center;
+    height: 96px;
+    border: 1px solid var(--color-text);
+    cursor: pointer;
+  }
+
+  /* brand icons swap to alt colors against a light high-contrast page */
+  :global(html.contrast:not(.dark)) .card {
+    --Icon-color: var(
+      --brand-contrast-color,
+      var(--brand-color, var(--color-text))
+    );
+  }
+
+  .content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    row-gap: 8px;
+    margin-inline: auto;
+  }
+
+  /* pixel-art icons keep their intrinsic aspect ratio */
+  .iconFrame > :global(img) {
+    height: var(--Icon-size);
+    width: auto;
+  }
+
+  .label {
+    font-size: var(--font-sm);
+  }
+
+  @media (--sm) {
+    .card {
+      --Icon-size: 40px;
+      height: 144px;
+    }
+
+    .label {
+      font-size: 20px;
+    }
+  }
+</style>

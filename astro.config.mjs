@@ -29,8 +29,28 @@ const optimizeSvgAssets = {
   },
 };
 
+const SSR_ROUTES = ["/links.astro"];
+
+/** @type {import("astro").AstroIntegration} */
+const ssrRouting = {
+  name: "ssr-routing",
+  hooks: {
+    "astro:route:setup": ({ route }) => {
+      const isSsrRoute = SSR_ROUTES.some((ssrRoute) =>
+        route.component.endsWith(`src/pages${ssrRoute}`),
+      );
+
+      // ssr is only valid on the VPS and never in neocities
+      if (isSsrRoute) {
+        route.prerender = !isVpsTarget;
+      }
+    },
+  },
+};
+
 export default defineConfig({
   ...(isVpsTarget ? { adapter: node({ mode: "standalone" }) } : {}),
+  integrations: [ssrRouting],
   site: isVpsTarget
     ? "https://alts-alt.online"
     : "https://alts-alt.neocities.org",

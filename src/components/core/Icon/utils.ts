@@ -5,11 +5,6 @@ import type { ColorToken } from "~/styles/tokens";
 
 export type IconSize = "xs" | "sm" | "md" | "lg" | "xl";
 
-/**
- * An icon glyph source: either a URL, or an Astro SVG import (a component
- * bundled with its image metadata on the server, plain metadata on the
- * client) — anything the mask can point at.
- */
 export type IconSrc = string | (SvgComponent & ImageMetadata);
 
 export interface IconProps {
@@ -21,44 +16,42 @@ export interface IconProps {
   src: IconSrc;
 }
 
-export const SIZE_TO_PIXELS: Record<IconSize, number> = {
-  xs: 12,
-  sm: 16,
-  md: 20,
-  lg: 24,
-  xl: 28,
-};
-
 export const toSrcUrl = (src: IconSrc): string =>
   typeof src === "string" ? src : src.src;
 
-export type UpdateIconProps = Pick<
-  IconProps,
-  "color" | "class" | "style" | "size" | "src"
->;
+const COLOR_CLASSES: Record<ColorToken, string> = {
+  bg: "color-bg",
+  text: "color-text",
+  primary: "color-primary",
+  secondary: "color-secondary",
+  enabled: "color-enabled",
+  muted: "color-muted",
+};
+
+const SIZE_CLASSES: Record<IconSize, string> = {
+  xs: "size-xs",
+  sm: "size-sm",
+  md: "size-md",
+  lg: "size-lg",
+  xl: "size-xl",
+};
+
+export type UpdateIconProps = Pick<IconProps, "color" | "size" | "src">;
 
 export const updateIcon = (
   rootIdentifier: NodeIdentifier,
-  { color, class: className, style, size, src }: Partial<UpdateIconProps>,
+  { color, size, src }: Partial<UpdateIconProps>,
 ): void => {
   const icon = resolveRootNode(rootIdentifier);
 
   if (color !== undefined) {
-    icon.style.setProperty("--Icon-color", `var(--color-${color})`);
-  }
-
-  if (className !== undefined) {
-    icon.className = className;
-  }
-
-  if (style !== undefined) {
-    for (const [property, value] of Object.entries(style)) {
-      icon.style.setProperty(property, value);
-    }
+    icon.classList.remove(...Object.values(COLOR_CLASSES));
+    icon.classList.add(COLOR_CLASSES[color]);
   }
 
   if (size !== undefined) {
-    icon.style.setProperty("--Icon-size", `${SIZE_TO_PIXELS[size]}px`);
+    icon.classList.remove(...Object.values(SIZE_CLASSES));
+    icon.classList.add(SIZE_CLASSES[size]);
   }
 
   if (src !== undefined) {

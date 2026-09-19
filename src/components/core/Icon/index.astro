@@ -1,27 +1,21 @@
 ---
-import { type IconProps, SIZE_TO_PIXELS, toSrcUrl } from "./utils";
+import { type IconProps, toSrcUrl } from "./utils";
 
 type Props = IconProps;
 
-const {
-  color = "text",
-  id,
-  class: className,
-  style = {},
-  size = "sm",
-  src,
-} = Astro.props;
-
-const pixelSize = SIZE_TO_PIXELS[size];
+const { color, id, class: className, style = {}, size, src } = Astro.props;
 ---
 
 <span
   id={id}
-  class:list={["icon", className]}
+  class:list={[
+    "icon",
+    color === undefined ? undefined : `color-${color}`,
+    size === undefined ? undefined : `size-${size}`,
+    className,
+  ]}
   aria-hidden="true"
   style={{
-    "--Icon-color": `var(--color-${color})`,
-    "--Icon-size": `${pixelSize}px`,
     "--Icon-src": `url(${toSrcUrl(src)})`,
     ...style,
   }}
@@ -30,12 +24,56 @@ const pixelSize = SIZE_TO_PIXELS[size];
 <style>
   .icon {
     display: block;
-    height: var(--Icon-size);
-    width: var(--Icon-size);
-    background-color: var(--Icon-color);
+    height: var(--Icon-size, 16px);
+    width: var(--Icon-size, 16px);
+    background-color: var(--Icon-color, var(--color-text));
     mask-image: var(--Icon-src);
     mask-repeat: no-repeat;
     mask-position: center;
     mask-size: contain;
+  }
+
+  .color-bg {
+    --Icon-color: var(--color-bg);
+  }
+
+  .color-text {
+    --Icon-color: var(--color-text);
+  }
+
+  .color-primary {
+    --Icon-color: var(--color-primary);
+  }
+
+  .color-secondary {
+    --Icon-color: var(--color-secondary);
+  }
+
+  .color-enabled {
+    --Icon-color: var(--color-enabled);
+  }
+
+  .color-muted {
+    --Icon-color: var(--color-muted);
+  }
+
+  .size-xs {
+    --Icon-size: 12px;
+  }
+
+  .size-sm {
+    --Icon-size: 16px;
+  }
+
+  .size-md {
+    --Icon-size: 20px;
+  }
+
+  .size-lg {
+    --Icon-size: 24px;
+  }
+
+  .size-xl {
+    --Icon-size: 28px;
   }
 </style>

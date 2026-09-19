@@ -1,11 +1,151 @@
 ---
+import { Image } from "astro:assets";
+import archidektIcon from "~/assets/icons/archidekt.svg";
+import blueskyIcon from "~/assets/icons/bluesky.svg";
+import githubIcon from "~/assets/icons/github.svg";
+import instagramIcon from "~/assets/icons/instagram.svg";
+import mailIcon from "~/assets/icons/mail.svg";
+import throneIcon from "~/assets/icons/throne.svg";
+import twitchOfflineIcon from "~/assets/icons/twitch.svg";
+import twitchOnlineIcon from "~/assets/icons/twitch_online.svg";
+import twitterIcon from "~/assets/icons/twitter.svg";
 import Chat from "~/components/layout/Chat.astro";
 import Chatbox from "~/components/layout/Chatbox.astro";
+import LinkPreview from "~/components/pages/links/LinkPreview";
+import { fetchIsTwitchLive } from "~/components/pages/links/twitch";
 import Layout from "~/layouts/Layout.astro";
+
+const isTwitchLive = await fetchIsTwitchLive();
+const twitchIcon = isTwitchLive ? twitchOnlineIcon : twitchOfflineIcon;
 ---
 
 <Layout title="alts-alt | Links">
-  <Chat>
-    <Chatbox>this page is being rebuilt! check back soon :3</Chatbox>
-  </Chat>
+  <div class="page">
+    <Chat>
+      <Chatbox
+        >here are all the places on the internet you can find me!</Chatbox
+      >
+      <Chatbox>(that aren't this website haha...)</Chatbox>
+      <Chatbox>come say hiii :3</Chatbox>
+    </Chat>
+    <div class="links">
+      <LinkPreview
+        name="Twitter"
+        href="https://twitter.com/alts_alt_"
+        src={twitterIcon}
+        color="#1DA1F2"
+        contrastColor="#1C9BEB"
+      />
+      <LinkPreview
+        aria-label={isTwitchLive ? "Link to live Twitch stream" : "Link to Twitch"}
+        name="Twitch"
+        href="https://twitch.tv/alts_alt_"
+      >
+        <Image
+          slot="icon"
+          id="twitch-icon"
+          src={twitchIcon}
+          data-live={String(isTwitchLive)}
+          alt="Twitch logo"
+        />
+      </LinkPreview>
+      <LinkPreview
+        name="Throne"
+        href="https://throne.com/alts_alt"
+        src={throneIcon}
+        color="#D221AF"
+      />
+      <LinkPreview
+        name="Instagram"
+        href="https://www.instagram.com/alts_alt_/"
+        src={instagramIcon}
+        color="#D300C5"
+      />
+      <LinkPreview
+        name="GitHub"
+        href="https://github.com/a1ts-a1t"
+        src={githubIcon}
+      />
+      <LinkPreview
+        name="Bluesky"
+        href="https://bsky.app/profile/altsalt.bsky.social"
+        src={blueskyIcon}
+        color="#0085FF"
+      />
+      <LinkPreview
+        name="Archidekt"
+        href="https://www.archidekt.com/u/alts_alt_"
+        src={archidektIcon}
+        color="#F79C01"
+        contrastColor="#D18400"
+      />
+      <LinkPreview
+        name="Email"
+        href="mailto:unrelatedalt@gmail.com"
+        src={mailIcon}
+      />
+    </div>
+  </div>
 </Layout>
+
+<style>
+  .page {
+    display: flex;
+    flex-direction: column;
+    row-gap: 48px;
+  }
+
+  .links {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+
+  @media (--sm) {
+    .links {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+</style>
+
+<script>
+  import twitchOfflineIcon from "~/assets/icons/twitch.svg";
+  import twitchOfflineAltIcon from "~/assets/icons/twitch_alt.svg";
+  import twitchOnlineIcon from "~/assets/icons/twitch_online.svg";
+  import twitchOnlineAltIcon from "~/assets/icons/twitch_online_alt.svg";
+  import { getById } from "~/lib/dom";
+  import {
+    contrastStore,
+    getContrastMode,
+    getThemeMode,
+    themeStore,
+  } from "~/lib/settings";
+
+  const twitchIconImg = getById<HTMLImageElement>("twitch-icon");
+  const isTwitchLive = twitchIconImg.dataset.live === "true";
+
+  const updateTwitchIcon = (): void => {
+    const shouldUseAlt =
+      getThemeMode() === "dark" && getContrastMode() === "high";
+
+    if (shouldUseAlt && isTwitchLive) {
+      twitchIconImg.src = twitchOnlineAltIcon.src;
+      return;
+    }
+
+    if (shouldUseAlt && !isTwitchLive) {
+      twitchIconImg.src = twitchOfflineAltIcon.src;
+      return;
+    }
+
+    if (isTwitchLive) {
+      twitchIconImg.src = twitchOnlineIcon.src;
+      return;
+    }
+
+    twitchIconImg.src = twitchOfflineIcon.src;
+  };
+
+  themeStore.subscribe(updateTwitchIcon);
+  contrastStore.subscribe(updateTwitchIcon);
+</script>
