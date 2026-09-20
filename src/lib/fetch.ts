@@ -68,3 +68,39 @@ export const localFetch = async <T>({
     return { status, error: LocalFetchError.UNKNOWN };
   }
 };
+
+// TODO: figure out how to get this to work given that they're both on the same server
+// we definitely don't need a round trip
+const LOCAL_SOCKET_ROOT_PATH = "wss://alts-alt.online";
+
+export interface LocalSocketConfig<T> {
+  url: `/${string}`;
+  onMessage: (data: T) => void;
+  onError?: () => void;
+}
+
+export const openLocalSocket = <T>({
+  url,
+  onMessage,
+  onError,
+}: LocalSocketConfig<T>) => {
+  if (!canFetch()) {
+    onError?.();
+    return undefined;
+  }
+
+  const socket = new WebSocket(`${LOCAL_SOCKET_ROOT_PATH}${url}`);
+
+  socket.addEventListener("message", (event) => {
+    try {
+      onMessage(JSON.parse(event.data as string) as T);
+    } catch {
+      // ignore malformed payloads; keep the last good state
+    }
+  });
+
+  socket.addEventListener("error", () => {
+    socket.close();
+    onError?.();
+  });
+};

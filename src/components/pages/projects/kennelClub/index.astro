@@ -1,13 +1,132 @@
 ---
+import ProjectPreview from "~/components/pages/projects/ProjectPreview.astro";
+
 type Props = Record<string, never>;
+
+import { Image } from "astro:assets";
+
+const KENNEL_CLUB_FALLBACK_IMAGE_URL =
+  "https://alts-alt.online/api/kennel-club/img";
 ---
 
-<div class="stub">the kennel is being rebuilt!</div>
+<div id="kennel-club" class="kennel-club" data-state="loading">
+  <div class="view view-loading">Loading Kennel Club...</div>
+  <div class="view view-fallback">
+    <ProjectPreview id="kennel-club-fallback" fallback="Loading Kennel Club...">
+      <Image
+        src={KENNEL_CLUB_FALLBACK_IMAGE_URL}
+        alt="Kennel Club webring represented by a series of creatures in a container"
+        width="1024"
+        height="1024"
+        loading="lazy"
+        class="fallback-image"
+      />
+    </ProjectPreview>
+  </div>
+  <div class="view view-kennel" id="kennel"></div>
+</div>
 
 <style>
-  .stub {
-    border: 1px dotted var(--color-text);
-    padding: 24px;
-    text-align: center;
+  .kennel-club {
+    aspect-ratio: 1 / 1;
+    width: 100%;
+    border: 1px solid var(--color-text);
+  }
+
+  .view {
+    display: none;
+    height: 100%;
+  }
+
+  .view-loading {
+    align-items: center;
+    justify-content: center;
+    background-color: var(--color-muted);
+  }
+
+  .view-kennel {
+    position: relative;
+  }
+
+  /* state switching */
+  .kennel-club[data-state="loading"] .view-loading {
+    display: flex;
+  }
+
+  .kennel-club[data-state="error"] .view-fallback {
+    display: flex;
+  }
+
+  .kennel-club[data-state="ready"] .view-kennel {
+    display: block;
+  }
+
+  .fallback-image {
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
   }
 </style>
+
+<style is:global>
+  #kennel .creature {
+    position: absolute;
+  }
+
+  #kennel .creature img {
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+  }
+</style>
+
+<script>
+  import { getById } from "~/lib/dom";
+  import { openLocalSocket } from "~/lib/fetch";
+  import type { KennelState, WidgetState } from "./utils";
+  import { positionCreature, renderCreatureNode } from "./utils";
+
+  const kennelClub = getById("kennel-club");
+  const kennelNode = getById("kennel");
+
+  const setState = (state: WidgetState) => {
+    kennelClub.dataset.state = state;
+  };
+
+  const renderedCreatureNodes = new Map<string, HTMLAnchorElement>();
+
+  const renderKennel = (kennelState: KennelState) => {
+    const ids = new Set(kennelState.map((creatureState) => creatureState.id));
+
+    // unrender creature nodes if the corresponding creature is no longer in the kennel
+    for (const [id, anchor] of renderedCreatureNodes) {
+      if (!ids.has(id)) {
+        anchor.remove();
+        renderedCreatureNodes.delete(id);
+      }
+    }
+
+    for (const creatureState of kennelState) {
+      const renderedCreatureNode = renderedCreatureNodes.get(creatureState.id);
+
+      if (renderedCreatureNode === undefined) {
+        const creatureNode = renderCreatureNode(creatureState);
+        positionCreature(creatureNode, creatureState, kennelNode);
+        renderedCreatureNodes.set(creatureState.id, creatureNode);
+        kennelNode.append(creatureNode);
+        continue;
+      }
+
+      positionCreature(renderedCreatureNode, creatureState, kennelNode);
+    }
+  };
+
+  openLocalSocket<KennelState>({
+    url: "/ws/kennel-club",
+    onMessage: (kennelJson) => {
+      renderKennel(kennelJson);
+      setState("ready");
+    },
+    onError: () => setState("error"),
+  });
+</script>
