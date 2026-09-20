@@ -1,6 +1,4 @@
-import { PUBLIC_TARGET } from "astro:env/client";
-
-export const canFetch = () => PUBLIC_TARGET === "vps";
+import { isStaticEnvironment } from "./env";
 
 export enum LocalFetchError {
   ENVIRONMENT, // not an environment that is valid to fetch in
@@ -29,7 +27,7 @@ export const localFetch = async <T>({
   url,
   timeout,
 }: LocalFetchConfig): Promise<LocalFetchResults<T>> => {
-  if (!canFetch()) {
+  if (isStaticEnvironment()) {
     return { error: LocalFetchError.ENVIRONMENT };
   }
 
@@ -84,7 +82,7 @@ export const openLocalSocket = <T>({
   onMessage,
   onError,
 }: LocalSocketConfig<T>) => {
-  if (!canFetch()) {
+  if (isStaticEnvironment()) {
     onError?.();
     return undefined;
   }
