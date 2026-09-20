@@ -18,7 +18,7 @@ jobs:
         with:
           node-version: 22
       - run: npm ci
-      - run: npm run build # PUBLIC_TARGET=neocities → static dist/
+      - run: npm run build
       - uses: actions/upload-artifact@v4
         with:
           name: build
@@ -34,7 +34,7 @@ jobs:
         with:
           node-version: 22
       - run: npm ci
-      - run: npm run build:server # PUBLIC_TARGET=vps → dist/server/entry.mjs + dist/client/
+      - run: npm run build:server
       - uses: actions/upload-artifact@v4
         with:
           name: server
@@ -42,6 +42,7 @@ jobs:
             dist/
             package.json
             package-lock.json
+            Dockerfile
           if-no-files-found: error
           overwrite: true
 
@@ -56,7 +57,7 @@ jobs:
           cleanup: true
           dist_dir: build
 
-  deploy-alts-alt:
+  deploy-vps:
     needs: build-server
     runs-on: ubuntu-latest
     steps:
@@ -67,6 +68,6 @@ jobs:
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
           ssh-keyscan -H ${{ secrets.HOST_NAME }} > ~/.ssh/known_hosts
       - name: Sync server bundle
-        run: rsync -av --delete server ${{ secrets.USERNAME }}@${{ secrets.HOST_NAME }}:~/alts-alt
+        run: rsync -av --delete server ${{ secrets.USERNAME }}@${{ secrets.HOST_NAME }}:~/website
       - name: Restart server
-        run: ssh ${{ secrets.USERNAME }}@${{ secrets.HOST_NAME }} "~/alts-alt/entrypoint.sh"
+        run: ssh ${{ secrets.USERNAME }}@${{ secrets.HOST_NAME }} "~/entrypoint.sh"
