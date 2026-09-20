@@ -1,4 +1,5 @@
 import { persistentAtom } from "@nanostores/persistent";
+import { noop } from "./utils";
 
 export type ThemeMode = "light" | "dark";
 export type ContrastMode = "default" | "high";
@@ -19,8 +20,28 @@ export const motionStore = persistentAtom<LocalStoreValue<MotionMode>>(
   "system",
 );
 
+const SETTINGS_COOKIE_MAX_AGE_MS = 60 * 60 * 24 * 365 * 1000;
+
+const writeSettingsCookie = (name: string, value: string): void => {
+  if (typeof cookieStore === "undefined") {
+    return;
+  }
+
+  cookieStore
+    .set({
+      name,
+      value,
+      path: "/",
+      expires: Date.now() + SETTINGS_COOKIE_MAX_AGE_MS,
+      sameSite: "lax",
+    })
+    .catch(noop);
+};
+
 export const initializeStores = (): void => {
   themeStore.subscribe((value) => {
+    writeSettingsCookie("theme", value);
+
     const isSystemDark =
       value === "system" &&
       window.matchMedia("(prefers-color-scheme: dark)").matches;
@@ -44,6 +65,8 @@ export const initializeStores = (): void => {
   });
 
   contrastStore.subscribe((value) => {
+    writeSettingsCookie("contrast", value);
+
     if (value === "high") {
       document.documentElement.classList.add("contrast");
     } else {

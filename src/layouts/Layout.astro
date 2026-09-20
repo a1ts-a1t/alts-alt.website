@@ -11,11 +11,43 @@ interface Props {
 }
 
 const { title } = Astro.props;
+
+const themeCookie = Astro.cookies.get("theme")?.value;
+const contrastCookie = Astro.cookies.get("contrast")?.value;
+const htmlClasses = [
+  ...(themeCookie === "light" ? [] : ["dark"]),
+  ...(contrastCookie === "high" ? ["contrast"] : []),
+].join(" ");
 ---
 
 <!doctype html>
-<html lang="en" class="dark">
+<html lang="en" class={htmlClasses}>
   <head>
+    <script is:inline>
+      (() => {
+        var read = (key) => {
+          try {
+            return localStorage.getItem(key);
+          } catch {
+            return null;
+          }
+        };
+        var theme = read("theme");
+        var contrast = read("contrast");
+        var dark =
+          theme === "dark" ||
+          ((theme === null || theme === "system") &&
+            window.matchMedia("(prefers-color-scheme: dark)").matches);
+        var highContrast =
+          contrast === "high" ||
+          ((contrast === null || contrast === "system") &&
+            window.matchMedia("(prefers-contrast: more)").matches);
+        var root = document.documentElement;
+        root.classList.toggle("dark", dark);
+        root.classList.toggle("contrast", highContrast);
+      })();
+    </script>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width">
     <link rel="icon" href="/favicon.ico">

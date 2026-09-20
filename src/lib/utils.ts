@@ -11,3 +11,5 @@ export const isNonNull = <T, NonNullableT extends NonNullable<T>>(
 ): arg is NonNullableT => {
   return arg !== undefined && arg !== null;
 };
+
+export const noop = () => undefined;
