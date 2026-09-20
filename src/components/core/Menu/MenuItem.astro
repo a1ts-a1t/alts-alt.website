@@ -1,0 +1,44 @@
+---
+import Icon from "~/components/core/Icon";
+import type { MenuItemProps } from "./utils";
+
+type Props = MenuItemProps;
+
+const { label, icon, id } = Astro.props;
+---
+
+<li role="menuitem" id={id}>
+  {icon && <Icon color="text" size="md" src={icon} />}
+  <span class="label"> {label} </span>
+  <span class="trailing"><slot name="trailing" /></span>
+</li>
+
+<style>
+  [role="menuitem"] {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    column-gap: 8px;
+    padding: 8px;
+    border-bottom: 1px dotted var(--color-text);
+    cursor: pointer;
+  }
+
+  [role="menuitem"]:last-child {
+    border-bottom: none;
+  }
+
+  .label {
+    flex-shrink: 0;
+  }
+
+  .focus .label {
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+
+  .trailing {
+    margin-inline-start: auto;
+    min-width: 0;
+  }
+</style>

@@ -1,0 +1,56 @@
+---
+import Icon from "~/components/core/Icon";
+import { ICON_SIZE, type IconButtonProps } from "./utils";
+
+type Props = IconButtonProps;
+const {
+  "aria-label": ariaLabel,
+  src,
+  id,
+  color = "text",
+  size = "sm",
+  appearance = "ghosted",
+} = Astro.props;
+
+const iconSize = ICON_SIZE[appearance][size];
+---
+
+<button
+  class:list={["root", `size-${size}`, `appearance-${appearance}`]}
+  aria-label={ariaLabel}
+  id={id}
+  type="button"
+  style={{
+    "--Button-color": `var(--color-${color})`,
+  }}
+>
+  <Icon color={color} size={iconSize} src={src} />
+</button>
+
+<style>
+  .root {
+    background-color: transparent;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .size-sm {
+    height: 24px;
+    width: 24px;
+  }
+
+  .size-md {
+    height: 32px;
+    width: 32px;
+  }
+
+  .size-lg {
+    height: 40px;
+    width: 40px;
+  }
+
+  .appearance-bordered {
+    border: 1px solid var(--Button-color);
+  }
+</style>

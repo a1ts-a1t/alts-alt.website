@@ -1,0 +1,25 @@
+---
+import type { ColorToken } from "~/styles/tokens";
+
+type Props = {
+  color?: ColorToken;
+};
+
+const { color = "text" } = Astro.props;
+---
+
+<hr class="divider" style={{ "--divider-color": `var(--color-${color})` }}>
+
+<style>
+  .divider {
+    border: none;
+    margin: 24px 0;
+    color: var(--divider-color);
+  }
+
+  .divider::before {
+    content: "~~~";
+    display: block;
+    text-align: center;
+  }
+</style>

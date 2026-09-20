@@ -1,18 +1,10 @@
 {
-    "compilerOptions": {
-        "target": "es2020",
-        "module": "es2020",
-        "outDir": "./dist",
-        "moduleResolution": "node",
-        "removeComments": true,
-        "esModuleInterop": true,
-        "forceConsistentCasingInFileNames": true,
-        "strict": true,
-        "jsx": "react",
-        "baseUrl": "./",
-        "paths": {
-            "*": [ "@custom-types/*" ]
-        }
-    },
-    "exclude": [ "node_modules", "@custom-types" ]
+  "extends": "astro/tsconfigs/strict",
+  "include": [".astro/types.d.ts", "**/*"],
+  "exclude": ["dist"],
+  "compilerOptions": {
+    "paths": {
+      "~/*": ["./src/*", "./src/*/index.astro"]
+    }
+  }
 }

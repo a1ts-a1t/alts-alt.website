@@ -1,0 +1,24 @@
+---
+import Chat from "~/components/layout/Chat.astro";
+import Chatbox from "~/components/layout/Chatbox.astro";
+import Layout from "~/layouts/Layout.astro";
+
+const TWITTER_URL = "https://twitter.com/alts_alt_";
+---
+
+<Layout title="alts-alt | Page Not Found">
+  <Chat>
+    <Chatbox>sorry!! i don't think "<span id="path" />" exists yet...</Chatbox>
+    <Chatbox>
+      if you think something should be here, lmk on
+      {" "}
+      <a href={TWITTER_URL}>twitter</a>!
+    </Chatbox>
+  </Chat>
+</Layout>
+
+<script>
+  import { getById } from "~/lib/dom";
+
+  getById("path").textContent = location.pathname;
+</script>
