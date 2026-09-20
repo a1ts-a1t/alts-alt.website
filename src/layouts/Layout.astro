@@ -2,6 +2,7 @@
 import Font from "astro/components/Font.astro";
 import Footer from "~/components/layout/Footer.astro";
 import Header from "~/components/layout/Header.astro";
+import { isStaticEnvironment } from "~/lib/env";
 import ResetStyles from "~/styles/ResetStyles.astro";
 import StyleTokens from "~/styles/StyleTokens.astro";
 import UtilityStyles from "~/styles/UtilityStyles.astro";
@@ -12,11 +13,15 @@ interface Props {
 
 const { title } = Astro.props;
 
-const themeCookie = Astro.cookies.get("theme")?.value;
-const contrastCookie = Astro.cookies.get("contrast")?.value;
+const themeCookie = isStaticEnvironment()
+  ? undefined
+  : Astro.cookies.get("theme")?.value;
+const contrastCookie = isStaticEnvironment()
+  ? undefined
+  : Astro.cookies.get("contrast")?.value;
 const htmlClasses = [
   ...(themeCookie === "light" ? [] : ["dark"]),
-  ...(contrastCookie === "high" ? ["contrast"] : []),
+  ...(contrastCookie === "high" ? [] : ["contrast"]),
 ].join(" ");
 ---
 
