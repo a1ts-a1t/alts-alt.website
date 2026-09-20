@@ -36,7 +36,11 @@ export default defineConfig({
         output: "server",
         site: "https://alts-alt.online",
       }
-    : { output: "static", site: "https://alts-alt.neocities.org" }),
+    : {
+        output: "static",
+        site: "https://alts-alt.neocities.org",
+        build: { format: "file" },
+      }),
   env: {
     schema: {
       PUBLIC_TARGET: envField.enum({
