@@ -7,7 +7,7 @@
   },
   "scripts": {
     "dev": "PUBLIC_TARGET=vps astro dev",
-    "build": "PUBLIC_TARGET=neocities astro build",
+    "build:static": "PUBLIC_TARGET=neocities astro build",
     "build:server": "PUBLIC_TARGET=vps astro build",
     "preview": "astro preview",
     "astro": "astro",

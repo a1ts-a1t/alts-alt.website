@@ -10,7 +10,7 @@ env:
   NODE_ENV: "production"
 
 jobs:
-  build:
+  build-static:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -18,10 +18,10 @@ jobs:
         with:
           node-version: 22
       - run: npm ci
-      - run: npm run build
+      - run: npm run build:static
       - uses: actions/upload-artifact@v4
         with:
-          name: build
+          name: static
           path: dist/
           if-no-files-found: error
           overwrite: true
@@ -47,15 +47,17 @@ jobs:
           overwrite: true
 
   deploy-neocities:
-    needs: build
+    needs: build-static
     runs-on: ubuntu-latest
     steps:
       - uses: actions/download-artifact@v4
+      - name: Rename 404 page to Neocities convention
+        run: mv static/404.html static/not_found.html
       - uses: bcomnes/deploy-to-neocities@v2
         with:
           api_token: ${{ secrets.NEOCITIES_API_TOKEN }}
           cleanup: true
-          dist_dir: build
+          dist_dir: static
 
   deploy-vps:
     needs: build-server
