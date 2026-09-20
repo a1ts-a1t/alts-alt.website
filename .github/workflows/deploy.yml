@@ -68,6 +68,6 @@ jobs:
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
           ssh-keyscan -H ${{ secrets.HOST_NAME }} > ~/.ssh/known_hosts
       - name: Sync server bundle
-        run: rsync -av --delete server ${{ secrets.USERNAME }}@${{ secrets.HOST_NAME }}:~/website
+        run: rsync -av --delete server/ ${{ secrets.USERNAME }}@${{ secrets.HOST_NAME }}:~/website
       - name: Restart server
         run: ssh ${{ secrets.USERNAME }}@${{ secrets.HOST_NAME }} "~/entrypoint.sh"
