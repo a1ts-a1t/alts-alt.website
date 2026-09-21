@@ -95,31 +95,15 @@ type Props = Record<string, never>;
 
 <script>
   import heartIcon from "~/assets/icons/heart.svg";
-  import heartDarkHighContrastModeIcon from "~/assets/icons/heart-dark-high-contrast-mode.svg";
   import heartDarkModeIcon from "~/assets/icons/heart-dark-mode.svg";
-  import heartHighContrastModeIcon from "~/assets/icons/heart-high-contrast-mode.svg";
   import { getById } from "~/lib/dom";
-  import {
-    contrastStore,
-    getContrastMode,
-    getThemeMode,
-    themeStore,
-  } from "~/lib/settings";
+  import { normalizeLocalStoreThemeMode, themeStore } from "~/lib/settings";
 
   const heartIconEle = getById<HTMLImageElement>("footer-heart");
 
-  const heartIconSrc = {
-    light: { default: heartIcon.src, high: heartHighContrastModeIcon.src },
-    dark: {
-      default: heartDarkModeIcon.src,
-      high: heartDarkHighContrastModeIcon.src,
-    },
-  };
-
-  const updateHeartIcon = () => {
-    heartIconEle.src = heartIconSrc[getThemeMode()][getContrastMode()];
-  };
-
-  themeStore.subscribe(updateHeartIcon);
-  contrastStore.subscribe(updateHeartIcon);
+  themeStore.subscribe((value) => {
+    const theme = normalizeLocalStoreThemeMode(value);
+    heartIconEle.src =
+      theme === "light" ? heartIcon.src : heartDarkModeIcon.src;
+  });
 </script>

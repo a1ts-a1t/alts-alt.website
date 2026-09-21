@@ -2,7 +2,6 @@
 import closedFolderIcon from "~/assets/icons/closed-folder.svg";
 import configMenuClosedIcon from "~/assets/icons/config-menu-closed.svg";
 import lightModeIcon from "~/assets/icons/light-mode.svg";
-import lowContrastIcon from "~/assets/icons/low-contrast.svg";
 import reducedMotionIcon from "~/assets/icons/reduced-motion.svg";
 import IconButton from "~/components/core/IconButton";
 import Menu from "~/components/core/Menu";
@@ -23,11 +22,6 @@ type Props = Record<string, never>;
       aria-label="Enable light mode"
       src={lightModeIcon}
       id="theme-button"
-    />
-    <IconButton
-      aria-label="Enable low contrast mode"
-      src={lowContrastIcon}
-      id="contrast-button"
     />
     <IconButton
       aria-label="Enable reduced motion mode"
@@ -62,11 +56,6 @@ type Props = Record<string, never>;
       id="theme-menuitem"
       icon={lightModeIcon}
       label="Enable light mode"
-    />
-    <MenuItem
-      id="contrast-menuitem"
-      icon={lowContrastIcon}
-      label="Enable low contrast mode"
     />
     <MenuItem
       id="motion-menuitem"
@@ -140,9 +129,7 @@ type Props = Record<string, never>;
   import configMenuClosedIcon from "~/assets/icons/config-menu-closed.svg";
   import configMenuOpenIcon from "~/assets/icons/config-menu-open.svg";
   import darkModeIcon from "~/assets/icons/dark-mode.svg";
-  import highContrastIcon from "~/assets/icons/high-contrast.svg";
   import lightModeIcon from "~/assets/icons/light-mode.svg";
-  import lowContrastIcon from "~/assets/icons/low-contrast.svg";
   import noReducedMotionIcon from "~/assets/icons/no-reduced-motion.svg";
   import openFolderIcon from "~/assets/icons/open-folder.svg";
   import reducedMotionIcon from "~/assets/icons/reduced-motion.svg";
@@ -150,12 +137,9 @@ type Props = Record<string, never>;
   import { createMenu, updateMenuItem } from "~/components/core/Menu/utils";
   import { getById } from "~/lib/dom";
   import {
-    contrastStore,
-    getContrastMode,
     getMotionMode,
     getThemeMode,
     motionStore,
-    normalizeLocalStoreContrastMode,
     normalizeLocalStoreMotionMode,
     normalizeLocalStoreThemeMode,
     themeStore,
@@ -197,43 +181,6 @@ type Props = Record<string, never>;
 
   getById("theme-button").addEventListener("click", toggleTheme);
   getById("theme-menuitem").addEventListener("click", toggleTheme);
-
-  contrastStore.subscribe((value) => {
-    const contrastMode = normalizeLocalStoreContrastMode(value);
-    if (contrastMode === "default") {
-      updateIconButton("contrast-button", {
-        "aria-label": "Enable high contrast mode",
-        src: highContrastIcon,
-      });
-      updateMenuItem("contrast-menuitem", {
-        label: "Enable high contrast mode",
-        icon: highContrastIcon,
-      });
-    } else {
-      // high contrast mode
-      updateIconButton("contrast-button", {
-        "aria-label": "Disable high contrast mode",
-        src: lowContrastIcon,
-      });
-      updateMenuItem("contrast-menuitem", {
-        label: "Disable high contrast mode",
-        icon: lowContrastIcon,
-      });
-    }
-  });
-
-  const toggleContrastMode = () => {
-    const contrastMode = getContrastMode();
-    if (contrastMode === "default") {
-      contrastStore.set("high");
-    } else {
-      // high contrast
-      contrastStore.set("default");
-    }
-  };
-
-  getById("contrast-button").addEventListener("click", toggleContrastMode);
-  getById("contrast-menuitem").addEventListener("click", toggleContrastMode);
 
   motionStore.subscribe((value) => {
     const motionMode = normalizeLocalStoreMotionMode(value);

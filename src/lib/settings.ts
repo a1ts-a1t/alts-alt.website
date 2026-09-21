@@ -2,17 +2,12 @@ import { persistentAtom } from "@nanostores/persistent";
 import { noop } from "./utils";
 
 export type ThemeMode = "light" | "dark";
-export type ContrastMode = "default" | "high";
 export type MotionMode = "default" | "reduced";
 
 type LocalStoreValue<T extends string> = T | "system";
 
 export const themeStore = persistentAtom<LocalStoreValue<ThemeMode>>(
   "theme",
-  "system",
-);
-export const contrastStore = persistentAtom<LocalStoreValue<ContrastMode>>(
-  "contrast",
   "system",
 );
 export const motionStore = persistentAtom<LocalStoreValue<MotionMode>>(
@@ -63,17 +58,6 @@ export const initializeStores = (): void => {
     // light mode
     document.documentElement.classList.remove("dark");
   });
-
-  contrastStore.subscribe((value) => {
-    writeSettingsCookie("contrast", value);
-
-    if (value === "high") {
-      document.documentElement.classList.add("contrast");
-    } else {
-      // default contrast
-      document.documentElement.classList.remove("contrast");
-    }
-  });
 };
 
 export const normalizeLocalStoreThemeMode = (
@@ -96,28 +80,6 @@ export const normalizeLocalStoreThemeMode = (
 export const getThemeMode = (): ThemeMode => {
   return normalizeLocalStoreThemeMode(themeStore.get());
 };
-
-export const normalizeLocalStoreContrastMode = (
-  value: LocalStoreValue<ContrastMode>,
-): ContrastMode => {
-  const isSystemHighContrast =
-    value === "system" && window.matchMedia("(prefers-contrast: more)").matches;
-
-  if (isSystemHighContrast) {
-    return "high";
-  }
-
-  if (value === "system") {
-    return "default";
-  }
-
-  return value;
-};
-
-export const getContrastMode = (): ContrastMode => {
-  return normalizeLocalStoreContrastMode(contrastStore.get());
-};
-
 export const normalizeLocalStoreMotionMode = (
   value: LocalStoreValue<MotionMode>,
 ): MotionMode => {

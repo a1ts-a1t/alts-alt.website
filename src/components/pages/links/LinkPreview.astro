@@ -8,27 +8,12 @@ interface Props {
   "aria-label"?: string;
   src?: IconSrc;
   color?: string;
-  /** Mask color override for light high-contrast mode. */
-  contrastColor?: string;
 }
 
-const {
-  name,
-  href,
-  src,
-  color,
-  contrastColor,
-  "aria-label": ariaLabel,
-} = Astro.props;
+const { name, href, src, color, "aria-label": ariaLabel } = Astro.props;
 
-const cardStyle: Record<string, string> = {};
-if (color !== undefined) {
-  cardStyle["--brand-color"] = color;
-}
-
-if (contrastColor !== undefined) {
-  cardStyle["--brand-contrast-color"] = contrastColor;
-}
+const cardStyle: Record<string, string> =
+  color !== undefined ? { "--brand-color": color } : {};
 ---
 
 <a
@@ -62,15 +47,6 @@ if (contrastColor !== undefined) {
     border: 1px solid var(--color-text);
     cursor: pointer;
   }
-
-  /* brand icons swap to alt colors against a light high-contrast page */
-  :global(html.contrast:not(.dark)) .card {
-    --Icon-color: var(
-      --brand-contrast-color,
-      var(--brand-color, var(--color-text))
-    );
-  }
-
   .content {
     display: flex;
     flex-direction: column;

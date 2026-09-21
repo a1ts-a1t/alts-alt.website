@@ -11,7 +11,7 @@ import twitchOnlineIcon from "~/assets/icons/twitch_online.svg";
 import twitterIcon from "~/assets/icons/twitter.svg";
 import Chat from "~/components/layout/Chat.astro";
 import Chatbox from "~/components/layout/Chatbox.astro";
-import LinkPreview from "~/components/pages/links/LinkPreview";
+import LinkPreview from "~/components/pages/links/LinkPreview.astro";
 import { fetchIsTwitchLive } from "~/components/pages/links/twitch";
 import Layout from "~/layouts/Layout.astro";
 
@@ -34,7 +34,6 @@ const twitchIcon = isTwitchLive ? twitchOnlineIcon : twitchOfflineIcon;
         href="https://twitter.com/alts_alt_"
         src={twitterIcon}
         color="#1DA1F2"
-        contrastColor="#1C9BEB"
       />
       <LinkPreview
         aria-label={isTwitchLive ? "Link to live Twitch stream" : "Link to Twitch"}
@@ -77,7 +76,6 @@ const twitchIcon = isTwitchLive ? twitchOnlineIcon : twitchOfflineIcon;
         href="https://www.archidekt.com/u/alts_alt_"
         src={archidektIcon}
         color="#F79C01"
-        contrastColor="#D18400"
       />
       <LinkPreview
         name="Email"
@@ -114,19 +112,13 @@ const twitchIcon = isTwitchLive ? twitchOnlineIcon : twitchOfflineIcon;
   import twitchOnlineIcon from "~/assets/icons/twitch_online.svg";
   import twitchOnlineAltIcon from "~/assets/icons/twitch_online_alt.svg";
   import { getById } from "~/lib/dom";
-  import {
-    contrastStore,
-    getContrastMode,
-    getThemeMode,
-    themeStore,
-  } from "~/lib/settings";
+  import { getThemeMode, themeStore } from "~/lib/settings";
 
   const twitchIconImg = getById<HTMLImageElement>("twitch-icon");
   const isTwitchLive = twitchIconImg.dataset.live === "true";
 
   const updateTwitchIcon = (): void => {
-    const shouldUseAlt =
-      getThemeMode() === "dark" && getContrastMode() === "high";
+    const shouldUseAlt = getThemeMode() === "dark";
 
     if (shouldUseAlt && isTwitchLive) {
       twitchIconImg.src = twitchOnlineAltIcon.src;
@@ -147,5 +139,4 @@ const twitchIcon = isTwitchLive ? twitchOnlineIcon : twitchOfflineIcon;
   };
 
   themeStore.subscribe(updateTwitchIcon);
-  contrastStore.subscribe(updateTwitchIcon);
 </script>
