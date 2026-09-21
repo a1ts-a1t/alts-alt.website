@@ -1,20 +1,18 @@
 import { getBySelector } from "~/lib/dom";
+import { buildLocalImageSrc } from "~/lib/env";
 
 export interface CreatureState {
   id: string;
   radius: number;
   url: string;
   position: { x: number; y: number };
-  sprite_path: string;
+  sprite_path: `/${string}`;
   display_name: string;
 }
 
 export type KennelState = CreatureState[];
 
 export type WidgetState = "loading" | "error" | "ready";
-
-// TODO: this shouldn't have to refer to the full site on VPS
-const SPRITE_ORIGIN = "https://alts-alt.online";
 
 export const positionCreature = (
   creatureNode: HTMLAnchorElement,
@@ -31,7 +29,7 @@ export const positionCreature = (
   creatureNode.style.top = `${clientHeight - position.y * clientHeight - domRadius}px`;
   creatureNode.style.width = `${domRadius * 2}px`;
   creatureNode.style.height = `${domRadius * 2}px`;
-  imageNode.src = `${SPRITE_ORIGIN}${spritePath}`;
+  imageNode.src = buildLocalImageSrc(spritePath);
 };
 
 export const renderCreatureNode = (creatureState: CreatureState) => {

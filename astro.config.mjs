@@ -49,6 +49,11 @@ export default defineConfig({
         values: ["neocities", "vps"],
         default: "vps",
       }),
+      SERVER_ORIGIN: envField.string({
+        context: "server",
+        access: "secret",
+        default: "https://alts-alt.online",
+      }),
     },
   },
   fonts: [

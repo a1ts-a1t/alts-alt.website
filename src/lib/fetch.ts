@@ -1,3 +1,5 @@
+import { SERVER_ORIGIN } from "astro:env/server";
+
 import { isStaticEnvironment } from "./env";
 
 export enum LocalFetchError {
@@ -9,7 +11,7 @@ export enum LocalFetchError {
 }
 
 export interface LocalFetchConfig {
-  url: `/${string}`;
+  path: `/${string}`;
   timeout?: number;
 }
 
@@ -19,86 +21,41 @@ export interface LocalFetchResults<T> {
   error?: LocalFetchError;
 }
 
-// TODO: figure out how to get this to work given that they're both on the same server
-// we definitely don't need a round trip
-const LOCAL_FETCH_ROOT_PATH = "https://alts-alt.online";
-
 export const localFetch = async <T>({
-  url,
+  path,
   timeout,
 }: LocalFetchConfig): Promise<LocalFetchResults<T>> => {
   if (isStaticEnvironment()) {
     return { error: LocalFetchError.ENVIRONMENT };
   }
 
-  const fullUrl = `${LOCAL_FETCH_ROOT_PATH}${url}`;
-
-  let status: number | undefined;
-
   try {
-    const response = await fetch(fullUrl, {
+    const response = await fetch(new URL(path, SERVER_ORIGIN), {
       signal: AbortSignal.timeout(timeout ?? 5000),
     });
 
-    status = response.status;
     const body = (await response.json()) as T;
 
     return {
       data: body,
-      status,
+      status: response.status,
     };
   } catch (e) {
     if (
       e instanceof Error &&
       (e.name === "TimeoutError" || e.name === "AbortError")
     ) {
-      return { status, error: LocalFetchError.TIMEOUT };
+      return { error: LocalFetchError.TIMEOUT };
     }
 
     if (e instanceof SyntaxError) {
-      return { status, error: LocalFetchError.MALFORMED_RESPONSE };
+      return { error: LocalFetchError.MALFORMED_RESPONSE };
     }
 
     if (e instanceof TypeError) {
-      return { status, error: LocalFetchError.NETWORK };
+      return { error: LocalFetchError.NETWORK };
     }
 
-    return { status, error: LocalFetchError.UNKNOWN };
+    return { error: LocalFetchError.UNKNOWN };
   }
-};
-
-// TODO: figure out how to get this to work given that they're both on the same server
-// we definitely don't need a round trip
-const LOCAL_SOCKET_ROOT_PATH = "wss://alts-alt.online";
-
-export interface LocalSocketConfig<T> {
-  url: `/${string}`;
-  onMessage: (data: T) => void;
-  onError?: () => void;
-}
-
-export const openLocalSocket = <T>({
-  url,
-  onMessage,
-  onError,
-}: LocalSocketConfig<T>) => {
-  if (isStaticEnvironment()) {
-    onError?.();
-    return undefined;
-  }
-
-  const socket = new WebSocket(`${LOCAL_SOCKET_ROOT_PATH}${url}`);
-
-  socket.addEventListener("message", (event) => {
-    try {
-      onMessage(JSON.parse(event.data as string) as T);
-    } catch {
-      // ignore malformed payloads; keep the last good state
-    }
-  });
-
-  socket.addEventListener("error", () => {
-    socket.close();
-    onError?.();
-  });
 };

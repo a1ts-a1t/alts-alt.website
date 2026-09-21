@@ -1,12 +1,14 @@
 ---
 import ProjectPreview from "~/components/pages/projects/ProjectPreview.astro";
+import { buildLocalImageSrc } from "~/lib/env";
 
 type Props = Record<string, never>;
 
 import { Image } from "astro:assets";
 
-const KENNEL_CLUB_FALLBACK_IMAGE_URL =
-  "https://alts-alt.online/api/kennel-club/img";
+const KENNEL_CLUB_FALLBACK_IMAGE_URL = buildLocalImageSrc(
+  "/api/kennel-club/img",
+);
 ---
 
 <div id="kennel-club" class="kennel-club" data-state="loading">
@@ -82,7 +84,7 @@ const KENNEL_CLUB_FALLBACK_IMAGE_URL =
 
 <script>
   import { getById } from "~/lib/dom";
-  import { openLocalSocket } from "~/lib/fetch";
+  import { openLocalSocket } from "~/lib/socket";
   import type { KennelState, WidgetState } from "./utils";
   import { positionCreature, renderCreatureNode } from "./utils";
 
@@ -122,7 +124,7 @@ const KENNEL_CLUB_FALLBACK_IMAGE_URL =
   };
 
   openLocalSocket<KennelState>({
-    url: "/ws/kennel-club",
+    path: "/ws/kennel-club",
     onMessage: (kennelJson) => {
       renderKennel(kennelJson);
       setState("ready");

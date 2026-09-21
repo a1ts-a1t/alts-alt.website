@@ -1,10 +1,13 @@
 FROM node:22-bookworm-slim
 
 ARG WEBSITE_PORT=4321
+ARG SERVER_PORT=8000
+ARG SERVER_HOST=server
 
 ENV NODE_ENV=production \
     HOST=0.0.0.0 \
-    PORT=${WEBSITE_PORT}
+    PORT=${WEBSITE_PORT} \
+    SERVER_ORIGIN=http://${SERVER_HOST}:${SERVER_PORT}
 
 WORKDIR /app
 

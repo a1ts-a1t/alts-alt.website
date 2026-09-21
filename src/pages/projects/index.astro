@@ -6,11 +6,12 @@ import pixelSvgMakerPreview from "~/assets/images/project-previews/pixel-svg-mak
 import pixelSvgMakerPreviewDark from "~/assets/images/project-previews/pixel-svg-maker-preview-dark.png";
 import Chat from "~/components/layout/Chat.astro";
 import Chatbox from "~/components/layout/Chatbox.astro";
-import ProjectPreview from "~/components/pages/projects/ProjectPreview";
+import ProjectPreview from "~/components/pages/projects/ProjectPreview.astro";
 import Window from "~/components/pages/projects/Window.astro";
 import Layout from "~/layouts/Layout.astro";
+import { buildLocalImageSrc } from "~/lib/env";
 
-const KENNEL_CLUB_PREVIEW_URL = "https://alts-alt.online/api/kennel-club/img";
+const KENNEL_CLUB_PREVIEW_URL = buildLocalImageSrc("/api/kennel-club/img");
 ---
 
 <Layout title="alts-alt | Projects">

@@ -2,7 +2,7 @@ import { localFetch } from "~/lib/fetch";
 
 export const fetchIsTwitchLive = async (): Promise<boolean> => {
   const { data, status, error } = await localFetch<{ is_live: boolean }>({
-    url: "/api/twitch",
+    path: "/api/twitch",
   });
 
   if (error || data === undefined) {
