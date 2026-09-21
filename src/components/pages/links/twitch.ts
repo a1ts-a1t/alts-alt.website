@@ -1,7 +1,7 @@
-import { localFetch } from "~/lib/fetch";
+import { serverFetch } from "~/lib/server";
 
 export const fetchIsTwitchLive = async (): Promise<boolean> => {
-  const { data, status, error } = await localFetch<{ is_live: boolean }>({
+  const { data, status, error } = await serverFetch<{ is_live: boolean }>({
     path: "/api/twitch",
   });
 

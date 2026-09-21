@@ -2,7 +2,7 @@ import { SERVER_ORIGIN } from "astro:env/server";
 
 import { isStaticEnvironment } from "./env";
 
-export enum LocalFetchError {
+export enum ServerFetchError {
   ENVIRONMENT, // not an environment that is valid to fetch in
   TIMEOUT, // the request exceeded its deadline
   NETWORK, // the request never completed (dns, connection, tls)
@@ -10,23 +10,23 @@ export enum LocalFetchError {
   UNKNOWN,
 }
 
-export interface LocalFetchConfig {
+export interface ServerFetchConfig {
   path: `/${string}`;
   timeout?: number;
 }
 
-export interface LocalFetchResults<T> {
+export interface ServerFetchResults<T> {
   data?: T;
   status?: number;
-  error?: LocalFetchError;
+  error?: ServerFetchError;
 }
 
-export const localFetch = async <T>({
+export const serverFetch = async <T>({
   path,
   timeout,
-}: LocalFetchConfig): Promise<LocalFetchResults<T>> => {
+}: ServerFetchConfig): Promise<ServerFetchResults<T>> => {
   if (isStaticEnvironment()) {
-    return { error: LocalFetchError.ENVIRONMENT };
+    return { error: ServerFetchError.ENVIRONMENT };
   }
 
   try {
@@ -45,17 +45,17 @@ export const localFetch = async <T>({
       e instanceof Error &&
       (e.name === "TimeoutError" || e.name === "AbortError")
     ) {
-      return { error: LocalFetchError.TIMEOUT };
+      return { error: ServerFetchError.TIMEOUT };
     }
 
     if (e instanceof SyntaxError) {
-      return { error: LocalFetchError.MALFORMED_RESPONSE };
+      return { error: ServerFetchError.MALFORMED_RESPONSE };
     }
 
     if (e instanceof TypeError) {
-      return { error: LocalFetchError.NETWORK };
+      return { error: ServerFetchError.NETWORK };
     }
 
-    return { error: LocalFetchError.UNKNOWN };
+    return { error: ServerFetchError.UNKNOWN };
   }
 };

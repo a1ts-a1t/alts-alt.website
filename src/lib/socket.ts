@@ -1,22 +1,22 @@
-import { buildLocalSocketUrl, isStaticEnvironment } from "./env";
+import { buildSocketUrl, isStaticEnvironment } from "./env";
 
-export interface LocalSocketConfig<T> {
+export interface SocketConfig<T> {
   path: `/${string}`;
   onMessage: (data: T) => void;
   onError?: () => void;
 }
 
-export const openLocalSocket = <T>({
+export const openSocket = <T>({
   path,
   onMessage,
   onError,
-}: LocalSocketConfig<T>) => {
+}: SocketConfig<T>) => {
   if (isStaticEnvironment()) {
     onError?.();
     return undefined;
   }
 
-  const socket = new WebSocket(buildLocalSocketUrl(path));
+  const socket = new WebSocket(buildSocketUrl(path));
 
   socket.addEventListener("message", (event) => {
     try {

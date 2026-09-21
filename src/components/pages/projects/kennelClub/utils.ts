@@ -1,5 +1,5 @@
 import { getBySelector } from "~/lib/dom";
-import { buildLocalImageSrc } from "~/lib/env";
+import { buildImageSrc } from "~/lib/env";
 
 export interface CreatureState {
   id: string;
@@ -29,7 +29,7 @@ export const positionCreature = (
   creatureNode.style.top = `${clientHeight - position.y * clientHeight - domRadius}px`;
   creatureNode.style.width = `${domRadius * 2}px`;
   creatureNode.style.height = `${domRadius * 2}px`;
-  imageNode.src = buildLocalImageSrc(spritePath);
+  imageNode.src = buildImageSrc(spritePath);
 };
 
 export const renderCreatureNode = (creatureState: CreatureState) => {
