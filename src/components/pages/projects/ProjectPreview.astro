@@ -1,9 +1,18 @@
 ---
-type Props = { id: string; fallback: string };
-const { id, fallback } = Astro.props;
+type Props = {
+  id: string;
+  fallback: string;
+  themeMode?: "light" | "dark";
+};
+const { id, fallback, themeMode } = Astro.props;
 ---
 
-<project-preview class="image" data-image-state="pending" id={id}>
+<project-preview
+  class="image"
+  data-image-state="pending"
+  data-theme-mode={themeMode}
+  id={id}
+>
   <slot />
   <span class="fallback">{fallback}</span>
 </project-preview>
@@ -47,15 +56,22 @@ const { id, fallback } = Astro.props;
     display: block;
     width: 100%;
     height: 100%;
-    object-fit: contain;
   }
 
-  .image > :global(*) {
-    max-height: 100%;
-    max-width: 100%;
+  :global(html:not(.dark)) .image[data-theme-mode="dark"] {
+    display: none;
   }
 
-  .image:not([data-image-state="loaded"]) .source {
+  :global(html.dark) .image[data-theme-mode="light"] {
+    display: none;
+  }
+
+  .image > :global(img) {
+    width: 100%;
+    height: 100%;
+  }
+
+  .image:not([data-image-state="loaded"]) > :global(img) {
     visibility: hidden;
   }
 
