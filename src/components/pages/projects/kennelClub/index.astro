@@ -1,15 +1,23 @@
 ---
 import ProjectPreview from "~/components/pages/projects/ProjectPreview.astro";
 import { buildImageSrc } from "~/lib/env";
+import { fetchKennelSpritePaths } from "./fetch";
 
 type Props = Record<string, never>;
 
 import { Image } from "astro:assets";
 
 const KENNEL_CLUB_FALLBACK_IMAGE_URL = buildImageSrc("/api/kennel-club/img");
+
+const spritePaths = await fetchKennelSpritePaths();
 ---
 
-<div id="kennel-club" class="kennel-club" data-state="loading">
+<div
+  id="kennel-club"
+  class="kennel-club"
+  data-state="loading"
+  data-sprite-paths={JSON.stringify(spritePaths)}
+>
   <div class="view view-loading">Loading Kennel Club...</div>
   <div class="view view-fallback">
     <ProjectPreview id="kennel-club-fallback" fallback="Loading Kennel Club...">
@@ -84,7 +92,11 @@ const KENNEL_CLUB_FALLBACK_IMAGE_URL = buildImageSrc("/api/kennel-club/img");
   import { getById } from "~/lib/dom";
   import { openSocket } from "~/lib/socket";
   import type { KennelState, WidgetState } from "./utils";
-  import { positionCreature, renderCreatureNode } from "./utils";
+  import {
+    positionCreature,
+    preloadSpritePaths,
+    renderCreatureNode,
+  } from "./utils";
 
   const kennelClub = getById("kennel-club");
   const kennelNode = getById("kennel");
@@ -92,6 +104,11 @@ const KENNEL_CLUB_FALLBACK_IMAGE_URL = buildImageSrc("/api/kennel-club/img");
   const setState = (state: WidgetState) => {
     kennelClub.dataset.state = state;
   };
+
+  const spritePaths = JSON.parse(
+    kennelClub.dataset.spritePaths ?? "[]",
+  ) as `/${string}`[];
+  const spritePreload = preloadSpritePaths(spritePaths);
 
   const renderedCreatureNodes = new Map<string, HTMLAnchorElement>();
 
@@ -121,11 +138,17 @@ const KENNEL_CLUB_FALLBACK_IMAGE_URL = buildImageSrc("/api/kennel-club/img");
     }
   };
 
+  await spritePreload.then(() => setState("ready"));
+
   openSocket<KennelState>({
     path: "/ws/kennel-club",
     onMessage: (kennelJson) => {
+      if (kennelClub.dataset.state !== "ready") {
+        return;
+      }
+
       renderKennel(kennelJson);
-      setState("ready");
+      // void spritePreload.then(() => setState("ready"));
     },
     onError: () => setState("error"),
   });

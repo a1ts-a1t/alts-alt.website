@@ -7,13 +7,13 @@ export interface CreatureState {
   url: string;
   position: { x: number; y: number };
   sprite_path: `/${string}`;
+  sprite_paths: `/${string}`[];
   display_name: string;
 }
 
 export type KennelState = CreatureState[];
 
 export type WidgetState = "loading" | "error" | "ready";
-
 export const positionCreature = (
   creatureNode: HTMLAnchorElement,
   creatureState: CreatureState,
@@ -45,6 +45,14 @@ export const renderCreatureNode = (creatureState: CreatureState) => {
   const image = document.createElement("img");
   image.alt = `${displayName} sprite`;
   anchor.append(image);
-
   return anchor;
 };
+
+export const preloadSpritePaths = (paths: `/${string}`[]): Promise<void> =>
+  Promise.allSettled(
+    paths.map((path) => {
+      const image = new Image();
+      image.src = buildImageSrc(path);
+      return image.decode();
+    }),
+  ).then(() => undefined);
