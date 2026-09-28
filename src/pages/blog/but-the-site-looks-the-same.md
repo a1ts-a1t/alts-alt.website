@@ -32,7 +32,25 @@ ok fine, the text is larger and my coffee order is tamer.[^3] but what the hell 
 
 way back in the day, before everything was computer, you could reasonably sum up that a website is like a file folder that sits on a server. when a browser goes to a web page, all the server is doing is sending back the static files that sit at the file location specified. 
 
-this comparison becomes plain if you've ever seen a small website's sitemap ([here's](https://www.apple.com/sitemap/) apple's, as an example). the branching structure containing a bunch of pages with smaller groups containing fewer pages is exactly what a file system does.
+this comparison becomes plain if you've ever seen a small website's sitemap ([here's](https://www.apple.com/sitemap/) apple's, as an example). the branching structure containing a bunch of pages with smaller groups containing fewer pages is exactly what a file system does. you can imagine that this sitemap modeled as a directory like this:
+
+```txt
+.
+├── index.html
+├── about-apple/
+│   ├── apple-leadership.html
+│   ├── career-opportunities.html
+│   ├── investors.html
+│   └── ...
+├── where-to-buy/
+│   ├── find-an-apple-store.html
+│   ├── shop-online.html
+│   ├── find-a-reseller.html
+│   └── ...
+└── for-business/
+    ├── apple-and-business.html
+    └── shop-for-business.html
+```
 
 it's pretty common for small sites that don't do much then to literally just be a server that sends out files exactly like this. on neocities for example, you just upload a bunch of files and as people go to your webpage, neocities just returns the files that you put in in the shape you put them in, verbatim.
 
@@ -74,7 +92,8 @@ a perfect completely blank page until that `main.js` loads in. even if the clien
 1. some search engines' web crawlers don't bother with loading in and running javascript and don't index over any of the page content.[^7]
 2. waiting for javascript to render all the content bumps up the [first contentful paint](https://developer.mozilla.org/en-US/docs/Glossary/First_contentful_paint) metric, doubly degrading the site seo.
 3. users with slow connections and old devices might see a completely blank page for longer amounts of time.
-4. leaning on javascript to render non-interactive content where plain html will suffice is overkill at best, bloatware at worst.[^8]
+4. transient dropped connections while fetching the javascript bundle will leave the page completely blank forever. the bundle is a single point of failure.
+5. leaning on javascript to render non-interactive content where plain html will suffice is overkill at best, bloatware at worst.[^8]
 
 so what's in `main.js` anyway? it's a bundle of a bunch of other javascript written in a framework called react. it scripts out what html to render, how interactivity works, and [how links navigate between pages](https://reactrouter.com) -- everything the site is and does bundled into a single javascript file 444kB large.[^9]
 
@@ -89,7 +108,7 @@ let's linger on that last point for a second. since javascript controlled routin
 └── not_found.html
 ```
 
-so clients got this nonsense 404 on a perfectly valid page:
+clients got this nonsense 404 on a perfectly valid page:
 
 ```sh
 $ curl -s -o /dev/null -w "%{http_code}\n" https://alts-alt.neocities.org/links
@@ -132,12 +151,11 @@ when the website source code is built and sent off to neocities, the canonical s
 
 ```txt
 .
-├── _astro/
-├── favicon.ico
 ├── index.html
 ├── not_found.html
 ├── links.html
-├── projects.html
+├── blog/
+│   └── but-the-site-looks-the-same.html
 └── projects/
     ├── pixel-svg-maker.html
     ├── palette-posterizer.html
@@ -171,7 +189,7 @@ so where do we stand on the issues listed above? the quick flash of a blank page
 
 ## other random things i changed
 
-i think i would've lost my mind if the only fixes i made were completely invisible to you, the people actually looking at the website. here are a few other changes of note:
+i also took care of a bunch of random other stuff during this work (asset optimizations, [a kind-of design system library](https://github.com/a1ts-a1t/alts-alt.website/tree/main/src/components/core), fixing up the default contrast of color tokens) but here are the ones that deserve some explanation:
 
 ### dropdown menus
 
