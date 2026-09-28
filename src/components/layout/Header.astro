@@ -16,6 +16,7 @@ type Props = Record<string, never>;
     <a class="homeLink" href="/" aria-label="Home">alts-alt!</a>
     <a href="/links" aria-label="Links">/links</a>
     <a href="/projects" aria-label="Projects">/projects</a>
+    <a href="/blog" aria-label="Blog">/blog</a>
   </nav>
   <div class="toolbar">
     <IconButton
@@ -50,6 +51,7 @@ type Props = Record<string, never>;
       label="/projects"
       href="/projects"
     />
+    <MenuItemLink id="navbar-blog-menuitem" label="/blog" href="/blog" />
   </Menu>
   <Menu id="config-menu" placement="right">
     <MenuItem

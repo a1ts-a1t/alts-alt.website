@@ -1,6 +1,7 @@
 ---
 layout: "~/layouts/BlogLayout.astro"
 title: "but the site looks the same"
+datePublished: 2026-09-28
 description: "what i've been up to during surgery recovery"
 ---
 

@@ -5,16 +5,22 @@ import Layout from "~/layouts/Layout.astro";
 interface Frontmatter {
   title: string;
   description: string;
+  datePublished: string;
 }
 
 type Props = MarkdownLayoutProps<Frontmatter>;
 
-const { title, description } = Astro.props.frontmatter;
+const { title, description, datePublished } = Astro.props.frontmatter;
+const published = new Date(datePublished);
+const formattedDate = published.toUTCString().slice(0, 16);
 ---
 
 <Layout title={`alts-alt | ${title}`}>
   <header class="postHeader">
     <h1>{title}</h1>
+    <time class="postDate" datetime={published.toUTCString()}>
+      {formattedDate}
+    </time>
     <p class="postDescription">{description}</p>
   </header>
   <div class="content"><slot /></div>
@@ -26,6 +32,11 @@ const { title, description } = Astro.props.frontmatter;
     flex-direction: column;
     row-gap: 8px;
     padding-bottom: 32px;
+  }
+
+  .postDate {
+    color: var(--color-muted);
+    font-size: var(--font-xs);
   }
 
   h1 {
