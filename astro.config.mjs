@@ -125,7 +125,10 @@ export default defineConfig({
     },
   },
   markdown: {
-    processor: satteri({ hastPlugins: [restyleFootnotes] }),
+    processor: satteri({
+      hastPlugins: [restyleFootnotes],
+      features: { smartPunctuation: false },
+    }),
     shikiConfig: {
       themes: {
         light: {
