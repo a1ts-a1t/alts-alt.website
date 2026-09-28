@@ -1,0 +1,187 @@
+---
+import type { MarkdownLayoutProps } from "astro";
+import Layout from "~/layouts/Layout.astro";
+
+interface Frontmatter {
+  title: string;
+  description: string;
+}
+
+type Props = MarkdownLayoutProps<Frontmatter>;
+
+const { title, description } = Astro.props.frontmatter;
+---
+
+<Layout title={`alts-alt | ${title}`}>
+  <header class="postHeader">
+    <h1>{title}</h1>
+    <p class="postDescription">{description}</p>
+  </header>
+  <div class="content"><slot /></div>
+</Layout>
+
+<style>
+  .postHeader {
+    display: flex;
+    flex-direction: column;
+    row-gap: 8px;
+    padding-bottom: 32px;
+  }
+
+  h1 {
+    color: var(--color-primary);
+    font-size: var(--font-xl);
+    font-weight: bold;
+  }
+
+  .postDescription {
+    color: var(--color-muted);
+  }
+
+  .content {
+    display: flex;
+    flex-direction: column;
+    row-gap: 32px;
+  }
+
+  .content :global(astro-slot) {
+    display: contents;
+  }
+
+  .content :global(h2) {
+    font-size: var(--font-lg);
+  }
+
+  .content :global(h3) {
+    font-size: var(--font-md);
+  }
+
+  .content :global(ul),
+  .content :global(ol) {
+    padding-left: 24px;
+  }
+
+  .content :global(li:not(:first-child)) {
+    margin-top: 8px;
+  }
+
+  .content :global(.astro-code) {
+    background-color: var(--color-bg);
+    color: var(--shiki-light);
+    border: 1px solid var(--color-muted);
+    overflow-x: auto;
+    padding: 16px;
+  }
+
+  .content :global(.astro-code span) {
+    color: var(--shiki-light);
+  }
+
+  .content :global(.astro-code code) {
+    background-color: transparent;
+    font-size: var(--font-xs);
+  }
+
+  html.dark .content :global(.astro-code) {
+    color: var(--shiki-dark);
+  }
+
+  html.dark .content :global(.astro-code span) {
+    color: var(--shiki-dark);
+  }
+
+  .content :global(code) {
+    background-color: var(--color-surface);
+    padding: 2px 4px;
+    font-size: var(--font-xs);
+  }
+
+  .content :global(blockquote) {
+    border-left: 1px solid var(--color-muted);
+    color: var(--color-muted);
+    padding-left: 16px;
+  }
+
+  .content :global(img) {
+    margin-inline: auto;
+    max-width: 100%;
+    height: auto;
+    border: 1px solid var(--color-muted);
+  }
+
+  .content :global(hr) {
+    border: none;
+    border-top: 1px solid var(--color-muted);
+  }
+
+  .content :global(summary) {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    list-style: none;
+    cursor: pointer;
+  }
+
+  .content :global(summary > *) {
+    overflow-x: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .content :global(summary::-webkit-details-marker) {
+    display: none;
+  }
+
+  .content :global(summary::before) {
+    content: "";
+    flex: none;
+    width: 16px;
+    height: 16px;
+    background-color: var(--color-text);
+    mask-image: url("../assets/icons/chevron-down.svg");
+    mask-repeat: no-repeat;
+    mask-position: center;
+    mask-size: contain;
+  }
+
+  .content :global(details[open]::details-content) {
+    padding-top: 32px;
+    display: flex;
+    flex-direction: column;
+    row-gap: 32px;
+  }
+
+  .content :global(details[open] > summary::before) {
+    transform: rotate(180deg);
+  }
+
+  .content :global([data-footnotes]) {
+    display: flex;
+    flex-direction: column;
+    row-gap: 32px;
+  }
+
+  .content :global(hr.footnote-divider) {
+    border: none;
+    color: var(--color-text);
+  }
+
+  .content :global(hr.footnote-divider)::before {
+    content: "~~~";
+    display: block;
+    text-align: center;
+  }
+
+  .content :global(a[data-footnote-backref]) {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    vertical-align: middle;
+    background-color: var(--color-enabled);
+    color: transparent;
+    mask-image: url("../assets/icons/return.svg");
+    mask-repeat: no-repeat;
+    mask-position: center;
+    mask-size: contain;
+  }
+</style>

@@ -1,11 +1,16 @@
 // @ts-check
+
+import { satteri } from "@astrojs/markdown-satteri";
 import node from "@astrojs/node";
+import everforestDark from "@shikijs/themes/everforest-dark";
+import everforestLight from "@shikijs/themes/everforest-light";
 import {
   defineConfig,
   envField,
   fontProviders,
   svgoOptimizer,
 } from "astro/config";
+import { defineHastPlugin } from "satteri";
 
 const isVpsTarget = process.env.PUBLIC_TARGET === "vps";
 
@@ -28,6 +33,38 @@ const optimizeSvgAssets = {
     }
   },
 };
+
+const restyleFootnotes = defineHastPlugin({
+  name: "restyle-footnotes",
+  element: {
+    filter: ["section"],
+    visit(node, ctx) {
+      if (node.properties?.dataFootnotes !== true) {
+        return;
+      }
+      ctx.insertBefore(node, {
+        type: "element",
+        tagName: "hr",
+        properties: { className: ["footnote-divider"] },
+        children: [],
+      });
+      const label = node.children.find(
+        (child) =>
+          child.type === "element" &&
+          child.tagName === "h2" &&
+          child.properties?.id === "footnote-label",
+      );
+      if (label !== undefined) {
+        ctx.replaceNode(label, {
+          type: "element",
+          tagName: "h2",
+          properties: { id: "footnote-label" },
+          children: [{ type: "text", value: "footnotes" }],
+        });
+      }
+    },
+  },
+});
 
 export default defineConfig({
   ...(isVpsTarget
@@ -85,6 +122,24 @@ export default defineConfig({
         ".tsx",
         ".json",
       ],
+    },
+  },
+  markdown: {
+    processor: satteri({ hastPlugins: [restyleFootnotes] }),
+    shikiConfig: {
+      themes: {
+        light: {
+          ...everforestLight,
+          fg: "var(--color-muted)",
+          bg: "var(--color-bg)",
+        },
+        dark: {
+          ...everforestDark,
+          fg: "var(--color-muted)",
+          bg: "var(--color-bg)",
+        },
+      },
+      defaultColor: false,
     },
   },
 });
