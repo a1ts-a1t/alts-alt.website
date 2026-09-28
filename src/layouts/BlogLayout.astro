@@ -15,7 +15,7 @@ const published = new Date(datePublished);
 const formattedDate = published.toUTCString().slice(0, 16);
 ---
 
-<Layout title={`alts-alt | ${title}`} description={description}>
+<Layout title={`${title} | alts_alt_`} description={description}>
   <header class="postHeader">
     <h1>{title}</h1>
     <time class="postDate" datetime={published.toUTCString()}>

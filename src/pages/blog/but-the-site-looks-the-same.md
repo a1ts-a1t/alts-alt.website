@@ -115,7 +115,7 @@ everything kind of makes sense now. i took a second to migrate the entire front 
 <body>
   <header>
     <nav>
-      <a class="homeLink" href="/" aria-label="Home">alts-alt!</a>
+      <a class="homeLink" href="/" aria-label="Home">alts_alt_</a>
       <a href="/links" aria-label="Links">/links</a>
       <a href="/projects" aria-label="Projects">/projects</a>
     </nav>
