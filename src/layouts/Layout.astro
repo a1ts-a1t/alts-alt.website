@@ -9,9 +9,10 @@ import UtilityStyles from "~/styles/UtilityStyles.astro";
 
 interface Props {
   title: string;
+  description?: string;
 }
 
-const { title } = Astro.props;
+const { title, description } = Astro.props;
 
 const themeCookie = isStaticEnvironment()
   ? undefined
@@ -46,6 +47,7 @@ const htmlClasses = themeCookie === "light" ? "" : "dark";
     <link rel="icon" href="/favicon.ico">
     <Font cssVariable="--font-ubuntu-mono" preload />
     <title>{title}</title>
+    {description && <meta name="description" content={description} />}
   </head>
   <body>
     <div class="wrapper">

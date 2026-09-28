@@ -2,6 +2,7 @@
 layout: "~/layouts/ProjectLayout.astro"
 title: "Palette Posterizer"
 projectComponentPath: "~/components/pages/projects/palettePosterizer"
+description: "Customizable image posterization"
 ---
 
 The idea behind this project was to make a play on posterization with custom paletting. Posterization works by rounding color values in the pixels of an image such that we’re left with a smaller set of final colors used. The point of this project was to give users the ability to pick that smaller set of final colors (let’s say a palette) and control over how the rounding happens.

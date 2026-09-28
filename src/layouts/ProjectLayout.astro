@@ -5,12 +5,13 @@ import Layout from "~/layouts/Layout.astro";
 
 interface Frontmatter {
   title: string;
+  description: string;
   projectComponentPath: string;
 }
 
 type Props = MarkdownLayoutProps<Frontmatter>;
 
-const { title, projectComponentPath } = Astro.props.frontmatter;
+const { title, projectComponentPath, description } = Astro.props.frontmatter;
 const projects = import.meta.glob<AstroInstance>(
   "/src/components/pages/projects/**/*.astro",
   { eager: true },
@@ -33,7 +34,7 @@ if (astroInstance === undefined) {
 const ProjectComponent = astroInstance.default;
 ---
 
-<Layout title={`alts-alt | ${title}`}>
+<Layout title={`alts-alt | ${title}`} description={description}>
   <ProjectComponent />
   <Divider />
   <section class="description"><slot /></section>

@@ -6,10 +6,10 @@ interface Props {
 const { username = "alts_alt_" } = Astro.props;
 ---
 
-<div class="container">
-  <div class="username">{username}:</div>
+<li class="container" role="listitem">
+  <div class="username" data-nosnippet>{username}:</div>
   <div><slot /></div>
-</div>
+</li>
 
 <style>
   .container {

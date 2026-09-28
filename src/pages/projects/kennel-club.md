@@ -2,6 +2,7 @@
 layout: "~/layouts/ProjectLayout.astro"
 title: "Kennel Club"
 projectComponentPath: "~/components/pages/projects/kennelClub"
+description: "Creatures in a web ring"
 ---
 
 I have a bunch of friends with websites, and for whatever reason, I wanted all the websites to be represented by little creatures running around all over the place. This is that! I encourage you to check out any and all of their pages. [Here's](https://alts-alt.online/api/kennel-club/random/site) a random one!

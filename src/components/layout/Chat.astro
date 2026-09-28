@@ -6,16 +6,27 @@ interface Props {
   children: astroHTML.JSX.Element;
 }
 
-const dateString = new Date().toUTCString();
+const date = new Date();
+const dateString = date.toUTCString();
+const dateTimeString = date.toISOString();
 const dateState = isStaticEnvironment() ? "loading" : "ready";
 ---
 
 <div class="container">
-  <div class="dateContainer">
-    <div class="date" id="date" data-state={dateState}>{dateString}</div>
+  <div class="dateContainer" data-nosnippet>
+    <time
+      class="date"
+      id="date"
+      data-state={dateState}
+      datetime={dateTimeString}
+    >
+      {dateString}
+    </time>
   </div>
-  <Chatbox> <span class="joinChatbox">joined the room</span> </Chatbox>
-  <slot />
+  <ol class="messages" role="list" aria-label="chat messages">
+    <Chatbox> <span class="joinChatbox">joined the room</span> </Chatbox>
+    <slot />
+  </ol>
 </div>
 
 <style>
@@ -38,6 +49,14 @@ const dateState = isStaticEnvironment() ? "loading" : "ready";
     color: var(--color-muted);
   }
 
+  .messages {
+    display: flex;
+    flex-direction: column;
+    row-gap: 24px;
+    list-style: none;
+    padding: 0;
+  }
+
   .joinChatbox {
     color: var(--color-secondary);
   }
@@ -46,10 +65,12 @@ const dateState = isStaticEnvironment() ? "loading" : "ready";
 <script>
   import { getById } from "~/lib/dom";
 
-  const dateEle = getById("date");
+  const dateEle = getById<HTMLTimeElement>("date");
 
   if (dateEle.dataset.state === "loading") {
-    dateEle.textContent = new Date().toUTCString();
+    const now = new Date();
+    dateEle.dateTime = now.toISOString();
+    dateEle.textContent = now.toUTCString();
     dateEle.dataset.state = "ready";
   }
 </script>

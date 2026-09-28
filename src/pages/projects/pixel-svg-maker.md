@@ -2,6 +2,7 @@
 layout: "~/layouts/ProjectLayout.astro"
 title: "Pixel SVG Maker"
 projectComponentPath: "~/components/pages/projects/pixelSvgMaker"
+description: "Exporting pixel art to SVG"
 ---
 
 While making this website, I’ve been trying to make all my own pixel art icons. In an attempt to keep asset bundle size small while keeping resolution high, I wanted to make all my icons SVGs. (Let’s ignore the fact that having them be icons means that they can be lower resolution and whatever.) Looking online, I had a hard time finding a pixel art engine that let you export to SVG, so I decided to make one on my own.

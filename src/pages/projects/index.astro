@@ -14,102 +14,106 @@ import { buildImageSrc } from "~/lib/env";
 const KENNEL_CLUB_PREVIEW_URL = buildImageSrc("/api/kennel-club/img");
 ---
 
-<Layout title="alts-alt | Projects">
+<Layout
+  title="alts-alt | Projects"
+  description="here's some stuff i've worked on in my free time — pixel svg maker, palette posterizer, kennel club and more !!"
+>
   <Chat>
     <Chatbox>here’s some stuff i've worked on in my free time</Chatbox>
     <Chatbox>check it out !!</Chatbox>
-    <div class="projects">
-      <Window
-        title="Pixel SVG Maker"
-        description="Exporting pixel art to SVG"
-        link="/projects/pixel-svg-maker"
-      >
-        <a class="previewLink" href="/projects/pixel-svg-maker">
-          <ProjectPreview
-            id="pixel-svg-maker-preview-dark"
-            fallback="Loading Pixel SVG Maker preview"
-            themeMode="dark"
-          >
-            <Image
-              src={pixelSvgMakerPreviewDark}
-              alt="Pixel SVG Maker preview"
-              class="pixelSvgMakerPreviewImage"
-              loading="lazy"
-            />
-          </ProjectPreview>
-          <ProjectPreview
-            id="pixel-svg-maker-preview-light"
-            fallback="Loading Pixel SVG Maker preview"
-            themeMode="light"
-          >
-            <Image
-              src={pixelSvgMakerPreview}
-              alt="Pixel SVG Maker preview"
-              class="pixelSvgMakerPreviewImage"
-              loading="lazy"
-            />
-          </ProjectPreview>
-        </a>
-      </Window>
-      <Window
-        title="Palette Posterizer"
-        description="Customizable image posterization"
-        link="/projects/palette-posterizer"
-      >
-        <a class="previewLink" href="/projects/palette-posterizer">
-          <ProjectPreview
-            id="palette-posterizer-preview-dark"
-            fallback="Loading Palette Posterizer preview"
-            themeMode="dark"
-          >
-            <Image
-              src={palettePosterizationPreviewDark}
-              alt="Palette Posterizer preview"
-              class="palettePosterizerPreviewImage"
-              loading="lazy"
-            />
-          </ProjectPreview>
-          <ProjectPreview
-            id="palette-posterizer-preview-light"
-            fallback="Loading Palette Posterizer preview"
-            themeMode="light"
-          >
-            <Image
-              src={palettePosterizationPreview}
-              alt="Palette Posterizer preview"
-              class="palettePosterizerPreviewImage"
-              loading="lazy"
-            />
-          </ProjectPreview>
-        </a>
-      </Window>
-      <Window
-        title="Kennel Club"
-        description="Creatures in a web ring"
-        link="/projects/kennel-club"
-      >
-        <a class="previewLink" href="/projects/kennel-club">
-          <ProjectPreview
-            id="kennel-club-preview"
-            fallback="Loading Kennel Club preview"
-          >
-            <Image
-              src={KENNEL_CLUB_PREVIEW_URL}
-              alt="Kennel club preview"
-              width={512}
-              height={512}
-              class="kennelClubPreview"
-            />
-          </ProjectPreview>
-        </a>
-      </Window>
-    </div>
   </Chat>
+  <div class="projects">
+    <Window
+      title="Pixel SVG Maker"
+      description="Exporting pixel art to SVG"
+      link="/projects/pixel-svg-maker"
+    >
+      <a class="previewLink" href="/projects/pixel-svg-maker">
+        <ProjectPreview
+          id="pixel-svg-maker-preview-dark"
+          fallback="Loading Pixel SVG Maker preview"
+          themeMode="dark"
+        >
+          <Image
+            src={pixelSvgMakerPreviewDark}
+            alt="Pixel SVG Maker preview"
+            class="pixelSvgMakerPreviewImage"
+            loading="lazy"
+          />
+        </ProjectPreview>
+        <ProjectPreview
+          id="pixel-svg-maker-preview-light"
+          fallback="Loading Pixel SVG Maker preview"
+          themeMode="light"
+        >
+          <Image
+            src={pixelSvgMakerPreview}
+            alt="Pixel SVG Maker preview"
+            class="pixelSvgMakerPreviewImage"
+            loading="lazy"
+          />
+        </ProjectPreview>
+      </a>
+    </Window>
+    <Window
+      title="Palette Posterizer"
+      description="Customizable image posterization"
+      link="/projects/palette-posterizer"
+    >
+      <a class="previewLink" href="/projects/palette-posterizer">
+        <ProjectPreview
+          id="palette-posterizer-preview-dark"
+          fallback="Loading Palette Posterizer preview"
+          themeMode="dark"
+        >
+          <Image
+            src={palettePosterizationPreviewDark}
+            alt="Palette Posterizer preview"
+            class="palettePosterizerPreviewImage"
+            loading="lazy"
+          />
+        </ProjectPreview>
+        <ProjectPreview
+          id="palette-posterizer-preview-light"
+          fallback="Loading Palette Posterizer preview"
+          themeMode="light"
+        >
+          <Image
+            src={palettePosterizationPreview}
+            alt="Palette Posterizer preview"
+            class="palettePosterizerPreviewImage"
+            loading="lazy"
+          />
+        </ProjectPreview>
+      </a>
+    </Window>
+    <Window
+      title="Kennel Club"
+      description="Creatures in a web ring"
+      link="/projects/kennel-club"
+    >
+      <a class="previewLink" href="/projects/kennel-club">
+        <ProjectPreview
+          id="kennel-club-preview"
+          fallback="Loading Kennel Club preview"
+        >
+          <Image
+            src={KENNEL_CLUB_PREVIEW_URL}
+            alt="Kennel club preview"
+            width={512}
+            height={512}
+            class="kennelClubPreview"
+          />
+        </ProjectPreview>
+      </a>
+    </Window>
+  </div>
 </Layout>
 
 <style>
   .projects {
     display: flex;
+    margin-top: 32px;
     flex-direction: column;
     gap: 16px;
   }
