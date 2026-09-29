@@ -32,7 +32,7 @@ ok fine, the text is larger and my coffee order is tamer.[^3] but what the hell 
 
 way back in the day, before everything was computer, you could reasonably sum up that a website is like a file folder that sits on a server. when a browser goes to a web page, all the server is doing is sending back the static files that sit at the file location specified. 
 
-this comparison becomes plain if you've ever seen a small website's sitemap ([here's](https://www.apple.com/sitemap/) apple's, as an example). the branching structure containing a bunch of pages with smaller groups containing fewer pages is exactly what a file system does. you can imagine that apple's sitemap would be modeled asa directory like this:
+this comparison becomes plain if you've ever seen a small website's sitemap ([here's](https://www.apple.com/sitemap/) apple's, as an example). the branching structure containing a bunch of pages with smaller groups containing fewer pages is exactly what a file system does. you can imagine that apple's sitemap would be modeled as a directory like this:
 
 ```txt
 .
