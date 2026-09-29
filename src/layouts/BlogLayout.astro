@@ -127,16 +127,14 @@ const formattedDate = published.toUTCString().slice(0, 16);
 
   .content :global(summary) {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     gap: 16px;
     list-style: none;
     cursor: pointer;
   }
 
-  .content :global(summary > *) {
-    overflow-x: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+  .content :global(summary:has(> h2))::before {
+    font-size: var(--font-lg);
   }
 
   .content :global(summary::-webkit-details-marker) {
@@ -147,7 +145,7 @@ const formattedDate = published.toUTCString().slice(0, 16);
     content: "";
     flex: none;
     width: 16px;
-    height: 16px;
+    height: 1lh;
     background-color: var(--color-text);
     mask-image: url("../assets/icons/chevron-down.svg");
     mask-repeat: no-repeat;

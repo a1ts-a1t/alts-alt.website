@@ -28,7 +28,7 @@ to put it exactly, here's the generated image diff between the site immediately 
 ok fine, the text is larger and my coffee order is tamer.[^3] but what the hell was even the point of all of this?
 
 <details>
-<summary><h2>oversimplifying old websites</h2></summary>
+<summary><h2>a brief oversimplification of (old) websites</h2></summary>
 
 way back in the day, before everything was computer, you could reasonably sum up that a website is like a file folder that sits on a server. when a browser goes to a web page, all the server is doing is sending back the static files that sit at the file location specified. 
 
