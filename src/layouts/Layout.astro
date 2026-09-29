@@ -19,6 +19,12 @@ const themeCookie = isStaticEnvironment()
   : Astro.cookies.get("theme")?.value;
 
 const htmlClasses = themeCookie === "light" ? "" : "dark";
+
+const canonicalPathName = Astro.url.pathname
+  .replace(/\.html$/, "") // remove trailing .html
+  .replace(/\/$/, ""); // remove trailing slash
+
+const canonicalUrl = new URL(canonicalPathName || "", Astro.site);
 ---
 
 <!doctype html>
@@ -45,6 +51,7 @@ const htmlClasses = themeCookie === "light" ? "" : "dark";
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width">
     <link rel="icon" href="/favicon.ico">
+    <link rel="canonical" href={canonicalUrl}>
     <Font cssVariable="--font-ubuntu-mono" preload />
     <title>{title}</title>
     {description && <meta name="description" content={description} />}
