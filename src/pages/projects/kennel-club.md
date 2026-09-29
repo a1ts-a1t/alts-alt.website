@@ -1,6 +1,6 @@
 ---
 layout: "~/layouts/ProjectLayout.astro"
-title: "Kennel Club"
+title: "kennel club"
 projectComponentPath: "~/components/pages/projects/kennelClub"
 description: "creatures in a web ring"
 ---

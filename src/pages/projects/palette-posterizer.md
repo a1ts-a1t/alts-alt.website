@@ -1,6 +1,6 @@
 ---
 layout: "~/layouts/ProjectLayout.astro"
-title: "Palette Posterizer"
+title: "palette posterizer"
 projectComponentPath: "~/components/pages/projects/palettePosterizer"
 description: "customizable image posterization"
 ---

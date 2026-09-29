@@ -1,6 +1,6 @@
 ---
 layout: "~/layouts/ProjectLayout.astro"
-title: "Pixel SVG Maker"
+title: "pixel svg maker"
 projectComponentPath: "~/components/pages/projects/pixelSvgMaker"
 description: "exporting pixel art to svg"
 ---
