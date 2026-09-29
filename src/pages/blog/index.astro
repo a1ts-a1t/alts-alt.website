@@ -1,38 +1,12 @@
 ---
-import type { MarkdownInstance } from "astro";
 import VisiblyHiddenText from "~/components/core/VisiblyHiddenText";
 import Chat from "~/components/layout/Chat.astro";
 import Chatbox from "~/components/layout/Chatbox.astro";
+import { getBlogPosts } from "~/components/pages/blog";
+import BlogPostEntry from "~/components/pages/blog/BlogPostEntry.astro";
 import Layout from "~/layouts/Layout.astro";
 
-interface BlogPostFrontmatter {
-  title: string;
-  description: string;
-  datePublished: string;
-}
-
-interface BlogPost {
-  url: string;
-  title: string;
-  datePublished: Date;
-  description: string;
-}
-
-const posts = Object.values(
-  import.meta.glob<MarkdownInstance<BlogPostFrontmatter>>(
-    "/src/pages/blog/*.md",
-    { eager: true },
-  ),
-)
-  .map(
-    (post): BlogPost => ({
-      url: post.url?.replace(/\.html$/, "") ?? "",
-      title: post.frontmatter.title,
-      description: post.frontmatter.description,
-      datePublished: new Date(post.frontmatter.datePublished),
-    }),
-  )
-  .sort((a, b) => b.datePublished.getTime() - a.datePublished.getTime());
+const blogPosts = getBlogPosts();
 ---
 
 <Layout
@@ -47,17 +21,7 @@ const posts = Object.values(
   </Chat>
   <section class="blogIndex">
     <ul class="postList">
-      {posts.map((post) => (
-        <li>
-          <a href={post.url} class="post">
-            <time datetime={post.datePublished.toISOString()}>
-              {post.datePublished.toUTCString().slice(0, 16)}
-            </time>
-            <span>{post.title}</span>
-            <p class="postDescription">{post.description}</p>
-          </a>
-        </li>
-      ))}
+      {blogPosts.map((blogPost) => <BlogPostEntry post={blogPost} />)}
     </ul>
   </section>
 </Layout>
@@ -82,30 +46,5 @@ const posts = Object.values(
     display: flex;
     flex-direction: column;
     row-gap: 32px;
-  }
-
-  .post {
-    border: 1px solid var(--color-text);
-    display: flex;
-    flex-direction: column;
-    row-gap: 4px;
-    padding: 16px;
-  }
-
-  .post:hover {
-    text-decoration: none;
-  }
-
-  .post:hover span {
-    text-decoration: underline;
-  }
-
-  time {
-    color: var(--color-muted);
-    font-size: var(--font-xs);
-  }
-
-  .postDescription {
-    color: var(--color-muted);
   }
 </style>

@@ -64,6 +64,12 @@ const canonicalUrl = new URL(canonicalPathName || "/", Astro.site);
     <meta property="og:locale" content="en_US">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:site" content="@alts_alt_">
+    <link
+      rel="alternate"
+      type="application/rss+xml"
+      title="alts_alt_"
+      href={new URL("rss.xml", Astro.site)}
+    >
     <slot name="head" />
   </head>
   <body>
