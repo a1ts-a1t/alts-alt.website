@@ -1,10 +1,15 @@
 ---
+import VisiblyHiddenText from "~/components/core/VisiblyHiddenText";
 import Chat from "~/components/layout/Chat.astro";
 import Chatbox from "~/components/layout/Chatbox.astro";
 import Layout from "~/layouts/Layout.astro";
 ---
 
-<Layout title="alts_alt_">
+<Layout
+  title="alts_alt_"
+  description="some web projects and small coding stuff from somebody too online. come say hiii!!!!!"
+>
+  <VisiblyHiddenText as="h1">alts_alt_</VisiblyHiddenText>
   <Chat>
     <Chatbox>hi i'm alt!</Chatbox>
     <Chatbox>i'm a burnt out mess :]</Chatbox>

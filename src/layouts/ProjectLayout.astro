@@ -1,6 +1,7 @@
 ---
 import type { AstroInstance, MarkdownLayoutProps } from "astro";
 import Divider from "~/components/core/Divider";
+import VisiblyHiddenText from "~/components/core/VisiblyHiddenText";
 import Layout from "~/layouts/Layout.astro";
 
 interface Frontmatter {
@@ -35,6 +36,7 @@ const ProjectComponent = astroInstance.default;
 ---
 
 <Layout title={`${title} | alts_alt_`} description={description}>
+  <VisiblyHiddenText as="h1">{title}</VisiblyHiddenText>
   <ProjectComponent />
   <Divider />
   <section class="description"><slot /></section>

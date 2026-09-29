@@ -1,4 +1,5 @@
 ---
+import VisiblyHiddenText from "~/components/core/VisiblyHiddenText";
 import Chat from "~/components/layout/Chat.astro";
 import Chatbox from "~/components/layout/Chatbox.astro";
 import Layout from "~/layouts/Layout.astro";
@@ -10,6 +11,7 @@ const TWITTER_URL = "https://twitter.com/alts_alt_";
   title="page not found | alts_alt_"
   description="sorry!! this page doesn't exist yet... if you think something should be here, lmk on twitter!"
 >
+  <VisiblyHiddenText as="h1">page not found</VisiblyHiddenText>
   <Chat>
     <Chatbox>sorry!! i don't think "<span id="path" />" exists yet...</Chatbox>
     <Chatbox>

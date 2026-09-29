@@ -1,5 +1,6 @@
 ---
 import type { MarkdownInstance } from "astro";
+import VisiblyHiddenText from "~/components/core/VisiblyHiddenText";
 import Chat from "~/components/layout/Chat.astro";
 import Chatbox from "~/components/layout/Chatbox.astro";
 import Layout from "~/layouts/Layout.astro";
@@ -34,7 +35,11 @@ const posts = Object.values(
   .sort((a, b) => b.datePublished.getTime() - a.datePublished.getTime());
 ---
 
-<Layout title="blog | alts_alt_">
+<Layout
+  title="blog | alts_alt_"
+  description="some stuff i've written in my free time :]"
+>
+  <VisiblyHiddenText as="h1">blog posts</VisiblyHiddenText>
   <Chat>
     <Chatbox>here's some stuff i've written in my free time</Chatbox>
     <Chatbox>(just some stuff, not a whole lot of stuff)</Chatbox>
