@@ -32,11 +32,11 @@ ok fine, the text is larger and my coffee order is tamer.[^3] but what the hell 
 
 way back in the day, before everything was computer, you could reasonably sum up that a website is like a file folder that sits on a server. when a browser goes to a web page, all the server is doing is sending back the static files that sit at the file location specified. 
 
-this comparison becomes plain if you've ever seen a small website's sitemap ([here's](https://www.apple.com/sitemap/) apple's, as an example). the branching structure containing a bunch of pages with smaller groups containing fewer pages is exactly what a file system does. you can imagine that this sitemap modeled as a directory like this:
+this comparison becomes plain if you've ever seen a small website's sitemap ([here's](https://www.apple.com/sitemap/) apple's, as an example). the branching structure containing a bunch of pages with smaller groups containing fewer pages is exactly what a file system does. you can imagine that apple's sitemap would be modeled asa directory like this:
 
 ```txt
 .
-├── index.html
+├── index.html ## the home page
 ├── about-apple/
 │   ├── apple-leadership.html
 │   ├── career-opportunities.html
@@ -103,7 +103,7 @@ let's linger on that last point for a second. since javascript controlled routin
 .
 ├── main.js
 ├── index.html
-└── not_found.html
+└── not_found.html ## an exact copy of index.html
 ```
 
 clients got this nonsense 404 on a perfectly valid page:
@@ -231,11 +231,11 @@ i've got nothing to say except that it actually works now. i'm curious to know h
 
 [^4]: for those unfamiliar, [neocities](https://neocities.org/) is a web hosting service whose low barrier of entry has enabled a resurgence of personal websites and a reinterest in the indie web. if you have any interest at all in the web as a form of self expression, do check it out.
 
-[^5]: the virtual private server is this free cloud instance i got for free from [oracle](https://www.oracle.com/cloud/free/) a year ago. at some point when i'm feeling gutsier, i hope to move this from the cloud to some raspberry pi i have sitting in my apartment.
+[^5]: the virtual private server is this free cloud instance i got for free from [oracle](https://www.oracle.com/cloud/free/) a year ago. at some point when i'm feeling gutsier, i hope to move this from the cloud to some raspberry pi i have sitting in my apartment. better yet, move it over to a bunch of raspberry pi's that i've convinced my friends to let sit in their apartments, too.
 
 [^6]: all in all, probably a good move on neocities' part, both from a security standpoint and from an indie web ideological standpoint. further reading [here](https://content-security-policy.neocities.org/).
 
-[^7]: as i found out while researching this post, the story behind what javascript search engine crawlers actually execute is a little complicated. google's been rendering with javascript since 2019 with [the evergreen googlebot](https://web.dev/blog/javascript-and-google-search-io-2019) but many large search engines like baidu, yandex, and brave don't. furthermore, web crawlers for llm-based natural language search engines generally do not run javascript (if you're into that sort of thing). (blog post on that [here](https://vercel.com/blog/the-rise-of-the-ai-crawler#javascript-rendering-capabilities))
+[^7]: as i found out while researching this post, the story behind what javascript search engine crawlers actually execute is a little complicated. google's been rendering with javascript since 2019 with [the evergreen googlebot](https://web.dev/blog/javascript-and-google-search-io-2019) but many large search engines like [baidu](https://en.wikipedia.org/wiki/Baidu), [yandex](https://en.wikipedia.org/wiki/Yandex), and [brave](https://en.wikipedia.org/wiki/Brave_Search) don't. furthermore, (if you're into this sort of thing) web crawlers for llm-based natural language chat engines generally do not run javascript. read more on that [here](https://vercel.com/blog/the-rise-of-the-ai-crawler#javascript-rendering-capabilities).
 
 [^8]: from what i can tell, part of the indie web is a reaction to the overt javascriptification that underpins the modern web's enshittification. nowadays, i don't buy into "javascript bad" but i can empathize with "javascript has its time and place."
 
