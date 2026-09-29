@@ -101,8 +101,6 @@ let's linger on that last point for a second. since javascript controlled routin
 
 ```txt
 .
-├── assets/
-├── favicon.ico
 ├── main.js
 ├── index.html
 └── not_found.html
