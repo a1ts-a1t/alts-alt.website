@@ -3,7 +3,7 @@ layout: "~/layouts/BlogLayout.astro"
 title: "but the site looks the same"
 datePublished: 2026-09-28
 description: "what i've been up to during surgery recovery"
-coverImage: "~/assets/images/blog/home-page-migration-diff.png"
+coverImage: "~/assets/images/blog/home-page-migration-diff-dark.png"
 ---
 
 i've been on leave from work for surgery and recovery, so naturally, in all the downtime my temporary unemployment has afforded me, i've gone and done exactly what i would otherwise do at work and did a bunch of web dev stuff.[^1] namely, i've rewritten the entire website that you're looking at right now.
