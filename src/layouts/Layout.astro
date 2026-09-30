@@ -1,5 +1,6 @@
 ---
 import Font from "astro/components/Font.astro";
+import { getCanonicalUrl } from "~/components/layout";
 import Footer from "~/components/layout/Footer.astro";
 import Header from "~/components/layout/Header.astro";
 import { isStaticEnvironment } from "~/lib/env";
@@ -21,11 +22,7 @@ const themeCookie = isStaticEnvironment()
 
 const htmlClasses = themeCookie === "light" ? "" : "dark";
 
-const canonicalPathName = Astro.url.pathname
-  .replace(/\.html$/, "") // remove trailing .html
-  .replace(/\/$/, ""); // remove trailing slash
-
-const canonicalUrl = new URL(canonicalPathName || "/", Astro.site);
+const canonicalUrl = getCanonicalUrl(Astro);
 ---
 
 <!doctype html>

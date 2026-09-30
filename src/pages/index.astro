@@ -1,15 +1,25 @@
 ---
+import type { WebSite, WithContext } from "schema-dts";
 import VisiblyHiddenText from "~/components/core/VisiblyHiddenText";
+import { getCanonicalUrl } from "~/components/layout";
 import Chat from "~/components/layout/Chat.astro";
 import Chatbox from "~/components/layout/Chatbox.astro";
 import Layout from "~/layouts/Layout.astro";
+
+const canonicalUrl = getCanonicalUrl(Astro);
+const jsonLd: WithContext<WebSite> = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  name: "alts_alt_",
+  url: canonicalUrl.toString(),
+};
 ---
 
 <Layout
   title="alts_alt_"
   description="some web projects and small coding stuff from somebody too online. come say hiii!!!!!"
 >
-  <VisiblyHiddenText as="h1">alts_alt_</VisiblyHiddenText>
+  <VisiblyHiddenText as="h1">home</VisiblyHiddenText>
   <Chat>
     <Chatbox>hi i'm alt!</Chatbox>
     <Chatbox>i'm a burnt out mess :]</Chatbox>
@@ -32,4 +42,9 @@ import Layout from "~/layouts/Layout.astro";
 </pre></Chatbox
     >
   </Chat>
+  <script
+    type="application/ld+json"
+    set:html={JSON.stringify(jsonLd)}
+    is:inline
+  />
 </Layout>
