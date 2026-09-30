@@ -1,0 +1,46 @@
+---
+import type { BlogPost } from ".";
+
+interface Props {
+  post: BlogPost;
+}
+
+const { post } = Astro.props;
+---
+
+<li>
+  <a href={post.url} class="post">
+    <time datetime={post.datePublished.toISOString()}>
+      {post.datePublished.toUTCString().slice(0, 16)}
+    </time>
+    <span>{post.title}</span>
+    <p class="postDescription">{post.description}</p>
+  </a>
+</li>
+
+<style>
+  .post {
+    border: 1px solid var(--color-text);
+    display: flex;
+    flex-direction: column;
+    row-gap: 4px;
+    padding: 16px;
+  }
+
+  .post:hover {
+    text-decoration: none;
+  }
+
+  .post:hover span {
+    text-decoration: underline;
+  }
+
+  time {
+    color: var(--color-muted);
+    font-size: var(--font-xs);
+  }
+
+  .postDescription {
+    color: var(--color-muted);
+  }
+</style>

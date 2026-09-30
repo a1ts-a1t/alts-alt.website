@@ -1,8 +1,15 @@
 ---
-const { id } = Astro.props;
+import type { HTMLTag } from "astro/types";
+
+type Props = {
+  id?: string;
+  as?: HTMLTag;
+};
+
+const { id, as: Tag = "span" } = Astro.props;
 ---
 
-<span class="srOnly" id={id}><slot /></span>
+<Tag class="srOnly" id={id}><slot /></Tag>
 
 <style>
   .srOnly {

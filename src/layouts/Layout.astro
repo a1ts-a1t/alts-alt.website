@@ -1,5 +1,6 @@
 ---
 import Font from "astro/components/Font.astro";
+import { getCanonicalUrl } from "~/components/layout";
 import Footer from "~/components/layout/Footer.astro";
 import Header from "~/components/layout/Header.astro";
 import { isStaticEnvironment } from "~/lib/env";
@@ -9,16 +10,19 @@ import UtilityStyles from "~/styles/UtilityStyles.astro";
 
 interface Props {
   title: string;
+  ogType?: "website" | "article";
   description?: string;
 }
 
-const { title, description } = Astro.props;
+const { title, description, ogType = "website" } = Astro.props;
 
 const themeCookie = isStaticEnvironment()
   ? undefined
   : Astro.cookies.get("theme")?.value;
 
 const htmlClasses = themeCookie === "light" ? "" : "dark";
+
+const canonicalUrl = getCanonicalUrl(Astro);
 ---
 
 <!doctype html>
@@ -45,9 +49,25 @@ const htmlClasses = themeCookie === "light" ? "" : "dark";
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width">
     <link rel="icon" href="/favicon.ico">
+    <link rel="canonical" href={canonicalUrl}>
     <Font cssVariable="--font-ubuntu-mono" preload />
     <title>{title}</title>
     {description && <meta name="description" content={description} />}
+    {description && <meta property="og:description" content={description} />}
+    <meta property="og:title" content={title}>
+    <meta property="og:type" content={ogType}>
+    <meta property="og:url" content={canonicalUrl}>
+    <meta property="og:site_name" content="alts_alt_">
+    <meta property="og:locale" content="en_US">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@alts_alt_">
+    <link
+      rel="alternate"
+      type="application/rss+xml"
+      title="alts_alt_"
+      href={new URL("rss.xml", Astro.site)}
+    >
+    <slot name="head" />
   </head>
   <body>
     <div class="wrapper">

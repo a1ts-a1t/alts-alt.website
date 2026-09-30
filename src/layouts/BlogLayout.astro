@@ -1,21 +1,32 @@
 ---
 import type { MarkdownLayoutProps } from "astro";
+import {
+  asBlogPostingJsonLd,
+  type BlogPostFrontmatter,
+} from "~/components/pages/blog";
 import Layout from "~/layouts/Layout.astro";
 
-interface Frontmatter {
-  title: string;
-  description: string;
-  datePublished: string;
-}
+type Props = MarkdownLayoutProps<BlogPostFrontmatter>;
 
-type Props = MarkdownLayoutProps<Frontmatter>;
+const frontmatter = Astro.props.frontmatter;
+const { title, description, datePublished } = frontmatter;
 
-const { title, description, datePublished } = Astro.props.frontmatter;
 const published = new Date(datePublished);
 const formattedDate = published.toUTCString().slice(0, 16);
+
+const jsonLd = await asBlogPostingJsonLd(frontmatter, Astro);
 ---
 
-<Layout title={`${title} | alts_alt_`} description={description}>
+<Layout
+  title={`${title} | alts_alt_`}
+  description={description}
+  ogType="article"
+>
+  <meta
+    slot="head"
+    property="article:published_time"
+    content={published.toISOString()}
+  >
   <header class="postHeader">
     <h1>{title}</h1>
     <time class="postDate" datetime={published.toUTCString()}>
@@ -24,6 +35,11 @@ const formattedDate = published.toUTCString().slice(0, 16);
     <p class="postDescription">{description}</p>
   </header>
   <div class="content"><slot /></div>
+  <script
+    type="application/ld+json"
+    set:html={JSON.stringify(jsonLd)}
+    is:inline
+  />
 </Layout>
 
 <style>

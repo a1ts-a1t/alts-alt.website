@@ -2,6 +2,7 @@
 
 import { satteri } from "@astrojs/markdown-satteri";
 import node from "@astrojs/node";
+import sitemap from "@astrojs/sitemap";
 import everforestDark from "@shikijs/themes/everforest-dark";
 import everforestLight from "@shikijs/themes/everforest-light";
 import {
@@ -145,4 +146,5 @@ export default defineConfig({
       defaultColor: false,
     },
   },
+  integrations: [sitemap()],
 });

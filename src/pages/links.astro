@@ -9,6 +9,7 @@ import throneIcon from "~/assets/icons/throne.svg";
 import twitchOfflineIcon from "~/assets/icons/twitch.svg";
 import twitchOnlineIcon from "~/assets/icons/twitch_online.svg";
 import twitterIcon from "~/assets/icons/twitter.svg";
+import VisiblyHiddenText from "~/components/core/VisiblyHiddenText";
 import Chat from "~/components/layout/Chat.astro";
 import Chatbox from "~/components/layout/Chatbox.astro";
 import LinkPreview from "~/components/pages/links/LinkPreview.astro";
@@ -23,6 +24,7 @@ const twitchIcon = isTwitchLive ? twitchOnlineIcon : twitchOfflineIcon;
   title="links | alts_alt_"
   description="all the places on the internet you can find me (that aren't this website haha...) come say hiii :3"
 >
+  <VisiblyHiddenText as="h1">links</VisiblyHiddenText>
   <div class="page">
     <Chat>
       <Chatbox
