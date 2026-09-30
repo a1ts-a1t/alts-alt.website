@@ -52,7 +52,7 @@ this comparison becomes plain if you've ever seen a small website's sitemap ([he
     └── shop-for-business.html
 ```
 
-it's pretty common for small sites that don't do much then to literally just be a server that sends out files exactly like this. on neocities for example, you just upload a bunch of files and as people go to your webpage, neocities just returns the files that you put in in the shape you put them in, verbatim.
+it's pretty common for small sites that don't do much then to literally just be a server that sends out files exactly like this. on neocities for example, you just upload a bunch of files and as people go to your webpage, neocities just returns the files that you put in in the shape you put them in.
 
 what files are you putting in then?
 
@@ -97,7 +97,7 @@ a perfect completely blank page until that `main.js` loads in. even if the clien
 
 so what's in `main.js` anyway? it's a bundle of a bunch of other javascript written in a framework called react. it scripts out what html to render, how interactivity works, and [how links navigate between pages](https://reactrouter.com) -- everything the site is and does bundled into a single javascript file 444kB large.[^9]
 
-let's linger on that last point for a second. since javascript controlled routing between pages and the rendered content of the page, the static build of the website did not generate a directory structure that could be verbatim statically served; in the end, so long as the client got the skeleton and the big javascript bundle, it would visually render the right content. so when the static build sitting in neocities looked like this:
+let's linger on that last point for a second. since javascript controlled routing between pages and the rendered content of the page, the static build of the website did not generate a directory structure that could be statically served; in the end, so long as the client got the skeleton and the big javascript bundle, it would visually render the right content. so when the static build sitting in neocities looked like this:
 
 ```txt
 .
@@ -231,7 +231,7 @@ i've got nothing to say except that it actually works now. i'm curious to know h
 
 [^4]: for those unfamiliar, [neocities](https://neocities.org/) is a web hosting service whose low barrier of entry has enabled a resurgence of personal websites and a reinterest in the indie web. if you have any interest at all in the web as a form of self expression, do check it out.
 
-[^5]: the virtual private server is this free cloud instance i got for free from [oracle](https://www.oracle.com/cloud/free/) a year ago. at some point when i'm feeling gutsier, i hope to move this from the cloud to some raspberry pi i have sitting in my apartment. better yet, move it over to a bunch of raspberry pi's that i've convinced my friends to let sit in their apartments, too.
+[^5]: the virtual private server is this free cloud instance i got for from [oracle](https://www.oracle.com/cloud/free/) a year ago. at some point when i'm feeling gutsier, i hope to move this from the cloud to some raspberry pi i have sitting in my apartment. better yet, move it over to a bunch of raspberry pi's that i've convinced my friends to let sit in their apartments, too.
 
 [^6]: all in all, probably a good move on neocities' part, both from a security standpoint and from an indie web ideological standpoint. further reading [here](https://content-security-policy.neocities.org/).
 
