@@ -1,9 +1,9 @@
 ---
 import Font from "astro/components/Font.astro";
-import { getCanonicalUrl } from "~/components/layout";
+import { getCanonicalUrl, type OgImage } from "~/components/layout";
 import Footer from "~/components/layout/Footer.astro";
 import Header from "~/components/layout/Header.astro";
-import { isStaticEnvironment } from "~/lib/env";
+import { buildImageSrc, isStaticEnvironment } from "~/lib/env";
 import ResetStyles from "~/styles/ResetStyles.astro";
 import StyleTokens from "~/styles/StyleTokens.astro";
 import UtilityStyles from "~/styles/UtilityStyles.astro";
@@ -11,10 +11,11 @@ import UtilityStyles from "~/styles/UtilityStyles.astro";
 interface Props {
   title: string;
   ogType?: "website" | "article";
+  ogImage?: OgImage;
   description?: string;
 }
 
-const { title, description, ogType = "website" } = Astro.props;
+const { title, description, ogType = "website", ogImage } = Astro.props;
 
 const themeCookie = isStaticEnvironment()
   ? undefined
@@ -45,7 +46,6 @@ const canonicalUrl = getCanonicalUrl(Astro);
         document.documentElement.classList.toggle("dark", dark);
       })();
     </script>
-
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width">
     <link rel="icon" href="/favicon.ico">
@@ -61,6 +61,28 @@ const canonicalUrl = getCanonicalUrl(Astro);
     <meta property="og:locale" content="en_US">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:site" content="@alts_alt_">
+    {ogImage ? (
+      <>
+        <meta property="og:image" content={ogImage.url} />
+        <meta property="og:image:width" content={String(ogImage.width)} />
+        <meta property="og:image:height" content={String(ogImage.height)} />
+        <meta property="og:image:alt" content={ogImage.alt} />
+      </>
+    ) : (
+      <>
+        <meta property="og:image" content={new URL("og-default.png", Astro.site)} />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
+        <meta
+          property="og:image:alt"
+          content="ascii bunny holding up a sign that reads 'welcome to my website'"
+        />
+      </>
+    )}
+    <meta
+      name="twitter:image"
+      content={ogImage?.url ?? buildImageSrc("/og-default.png")}
+    >
     <link
       rel="alternate"
       type="application/rss+xml"

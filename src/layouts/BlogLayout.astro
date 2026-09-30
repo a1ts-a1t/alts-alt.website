@@ -3,6 +3,7 @@ import type { MarkdownLayoutProps } from "astro";
 import {
   asBlogPostingJsonLd,
   type BlogPostFrontmatter,
+  getCoverOgImage,
 } from "~/components/pages/blog";
 import Layout from "~/layouts/Layout.astro";
 
@@ -14,6 +15,7 @@ const { title, description, datePublished } = frontmatter;
 const published = new Date(datePublished);
 const formattedDate = published.toUTCString().slice(0, 16);
 
+const cover = await getCoverOgImage(frontmatter, Astro);
 const jsonLd = await asBlogPostingJsonLd(frontmatter, Astro);
 ---
 
@@ -21,6 +23,12 @@ const jsonLd = await asBlogPostingJsonLd(frontmatter, Astro);
   title={`${title} | alts_alt_`}
   description={description}
   ogType="article"
+  ogImage={cover && {
+    url: cover.url,
+    width: cover.width,
+    height: cover.height,
+    alt: title,
+  }}
 >
   <meta
     slot="head"

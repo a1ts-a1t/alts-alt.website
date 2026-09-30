@@ -1,7 +1,8 @@
-import { getImage, type ImageMetadata } from "astro:assets";
+import { getImage } from "astro:assets";
 import type { AstroGlobal, MarkdownInstance } from "astro";
 import type { BlogPosting, WithContext } from "schema-dts";
-import { getCanonicalUrl } from "~/components/layout";
+import { getCanonicalUrl, type OgImage } from "~/components/layout";
+import { getImageMetadata } from "~/lib/image";
 
 export interface BlogPostFrontmatter {
   title: string;
@@ -38,20 +39,28 @@ export const getBlogPosts = () =>
     )
     .sort((a, b) => b.datePublished.getTime() - a.datePublished.getTime());
 
-const blogImages = import.meta.glob<{ default: ImageMetadata }>(
-  "/src/assets/images/blog/*",
-  { eager: true },
-);
+export const getCoverOgImage = async (
+  frontmatter: BlogPostFrontmatter,
+  Astro: AstroGlobal,
+): Promise<OgImage | undefined> => {
+  const { coverImage, title } = frontmatter;
+  if (!coverImage) return undefined;
 
-const getCoverImageUrl = async (coverImage: string, Astro: AstroGlobal) => {
-  const path = coverImage.replace(/^~\//, "/src/");
-  const metadata = blogImages[path]?.default;
-  if (!metadata) {
-    throw new Error(`Blog image not found for path: ${coverImage}`);
-  }
+  const image = await getImage({
+    src: getImageMetadata(coverImage),
+    width: 1200,
+    height: 630,
+    fit: "cover",
+    position: "centre",
+    format: "png",
+  });
 
-  const { src } = await getImage({ src: metadata });
-  return new URL(src, Astro.site);
+  return {
+    url: new URL(image.src, Astro.site).toString(),
+    width: Number(image.attributes.width),
+    height: Number(image.attributes.height),
+    alt: title,
+  };
 };
 
 export const asBlogPostingJsonLd = async (
@@ -60,9 +69,9 @@ export const asBlogPostingJsonLd = async (
 ): Promise<WithContext<BlogPosting>> => {
   const { title, description, datePublished, coverImage } = frontmatter;
   const url = getCanonicalUrl(Astro).toString();
-  const coverImageUrl = coverImage
-    ? await getCoverImageUrl(coverImage, Astro)
-    : undefined;
+  const metadata = coverImage ? getImageMetadata(coverImage) : undefined;
+  const { src } = metadata ? await getImage({ src: metadata }) : {};
+  const coverImageUrl = src ? new URL(src, Astro.site) : undefined;
 
   return {
     "@context": "https://schema.org",
