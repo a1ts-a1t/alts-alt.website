@@ -7,6 +7,7 @@ ARG SERVER_HOST=server
 ENV NODE_ENV=production \
     HOST=0.0.0.0 \
     PORT=${WEBSITE_PORT} \
+    NODE_OPTIONS=--max-old-space-size=384 \
     SERVER_ORIGIN=http://${SERVER_HOST}:${SERVER_PORT}
 
 WORKDIR /app
