@@ -35,17 +35,20 @@ jobs:
           node-version: 22
       - run: npm ci
       - run: npm run build:server
+      - name: Build image
+        run: |
+          docker build -t alts-alt/website:prod \
+            --build-arg WEBSITE_PORT=4321 \
+            --build-arg SERVER_PORT=8000 \
+            --build-arg SERVER_HOST=server \
+            .
+      - name: Export image
+        run: docker save alts-alt/website:prod | gzip > website-image.tar.gz
       - uses: actions/upload-artifact@v4
         with:
-          name: server
-          path: |
-            dist/
-            package.json
-            package-lock.json
-            Dockerfile
+          name: website-image
+          path: website-image.tar.gz
           if-no-files-found: error
-          overwrite: true
-
   deploy-neocities:
     needs: build-static
     runs-on: ubuntu-latest
@@ -63,13 +66,19 @@ jobs:
     needs: build-server
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/download-artifact@v4
+      - name: Download image artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: website-image
+
       - name: Initialize ssh
         run: |
           install -m 600 -D /dev/null ~/.ssh/id_rsa
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
           ssh-keyscan -H ${{ secrets.HOST_NAME }} > ~/.ssh/known_hosts
-      - name: Sync server bundle
-        run: rsync -av --delete server/ ${{ secrets.USERNAME }}@${{ secrets.HOST_NAME }}:~/website
-      - name: Restart server
-        run: ssh ${{ secrets.USERNAME }}@${{ secrets.HOST_NAME }} "~/entrypoint.sh"
+
+      - name: Ship image and restart
+        run: |
+          rsync -av --chmod=600 website-image.tar.gz ${{ secrets.USERNAME }}@${{ secrets.HOST_NAME }}:~/website/
+          ssh ${{ secrets.USERNAME }}@${{ secrets.HOST_NAME }} \
+            "docker load -i ~/website/website-image.tar.gz > /dev/null && rm ~/website/website-image.tar.gz && ~/entrypoint.sh"
