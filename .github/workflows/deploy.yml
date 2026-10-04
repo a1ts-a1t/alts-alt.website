@@ -49,6 +49,7 @@ jobs:
           name: website-image
           path: website-image.tar.gz
           if-no-files-found: error
+
   deploy-neocities:
     needs: build-static
     runs-on: ubuntu-latest
@@ -75,10 +76,13 @@ jobs:
         run: |
           install -m 600 -D /dev/null ~/.ssh/id_rsa
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
-          ssh-keyscan -H ${{ secrets.HOST_NAME }} > ~/.ssh/known_hosts
+          for i in 1 2 3 4 5; do
+            ssh-keyscan -H ${{ secrets.HOST_NAME }} > ~/.ssh/known_hosts && break
+            echo "keyscan attempt $i failed, retrying in 10s"; sleep 10
+          done
+          test -s ~/.ssh/known_hosts
 
       - name: Ship image and restart
         run: |
           rsync -av --chmod=600 website-image.tar.gz ${{ secrets.USERNAME }}@${{ secrets.HOST_NAME }}:~/website/
-          ssh ${{ secrets.USERNAME }}@${{ secrets.HOST_NAME }} \
-            "docker load -i ~/website/website-image.tar.gz > /dev/null && rm ~/website/website-image.tar.gz && ~/entrypoint.sh"
+          ssh ${{ secrets.USERNAME }}@${{ secrets.HOST_NAME }} "~/entrypoint.sh ~/website/website-image.tar.gz"
