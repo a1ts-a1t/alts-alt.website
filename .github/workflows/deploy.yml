@@ -43,11 +43,11 @@ jobs:
             --build-arg SERVER_HOST=server \
             .
       - name: Export image
-        run: docker save alts-alt/website:prod | gzip > website-image.tar.gz
+        run: docker save alts-alt/website:prod | gzip > website.tar.gz
       - uses: actions/upload-artifact@v4
         with:
           name: website-image
-          path: website-image.tar.gz
+          path: website.tar.gz
           if-no-files-found: error
 
   deploy-neocities:
@@ -76,13 +76,12 @@ jobs:
         run: |
           install -m 600 -D /dev/null ~/.ssh/id_rsa
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
-          for i in 1 2 3 4 5; do
-            ssh-keyscan -H ${{ secrets.HOST_NAME }} > ~/.ssh/known_hosts && break
-            echo "keyscan attempt $i failed, retrying in 10s"; sleep 10
-          done
-          test -s ~/.ssh/known_hosts
+          ssh-keyscan -H ${{ secrets.HOST_NAME }} > ~/.ssh/known_hosts
 
-      - name: Ship image and restart
+      - name: Sync image
         run: |
-          rsync -av --chmod=600 website-image.tar.gz ${{ secrets.USERNAME }}@${{ secrets.HOST_NAME }}:~/website/
-          ssh ${{ secrets.USERNAME }}@${{ secrets.HOST_NAME }} "~/entrypoint.sh ~/website/website-image.tar.gz"
+          rsync -av --chmod=600 website.tar.gz ${{ secrets.USERNAME }}@${{ secrets.HOST_NAME }}:~/
+
+      - name: Restart server
+        run: |
+          ssh ${{ secrets.USERNAME }}@${{ secrets.HOST_NAME }} "~/entrypoint.sh"
