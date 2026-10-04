@@ -90,7 +90,7 @@ const spritePaths = await fetchKennelSpritePaths();
 
 <script>
   import { getById } from "~/lib/dom";
-  import { openSocket } from "~/lib/socket";
+  import { openEventSource } from "~/lib/events";
   import type { KennelState, WidgetState } from "./utils";
   import {
     positionCreature,
@@ -140,15 +140,14 @@ const spritePaths = await fetchKennelSpritePaths();
 
   await spritePreload.then(() => setState("ready"));
 
-  openSocket<KennelState>({
-    path: "/ws/kennel-club",
+  openEventSource<KennelState>({
+    path: "/api/kennel-club/events",
     onMessage: (kennelJson) => {
       if (kennelClub.dataset.state !== "ready") {
         return;
       }
 
       renderKennel(kennelJson);
-      // void spritePreload.then(() => setState("ready"));
     },
     onError: () => setState("error"),
   });
